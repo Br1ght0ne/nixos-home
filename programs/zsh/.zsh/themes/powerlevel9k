@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+export PURE_POWER_MODE=portable
+
+#POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
+#POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history time)
+DEFAULT_USER="$USER"
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir dir_writable)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs)
+POWERLEVEL9K_RBENV_PROMPT_ALWAYS_SHOW=true
+POWERLEVEL9K_SHORTEN_DELIMITER=""
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
+
+[[ -f ~/.purepower ]] || ( cd && curl -fsSLO https://raw.githubusercontent.com/romkatv/dotfiles-public/master/.purepower )
+source ~/.purepower

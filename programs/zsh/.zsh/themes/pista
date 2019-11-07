@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+autoload -Uz add-zsh-hook
+_pista_prompt() {
+    PROMPT="$(pista -z)"   # `pista -zm` for the miminal variant
+    # RPROMPT=""
+}
+add-zsh-hook precmd _pista_prompt

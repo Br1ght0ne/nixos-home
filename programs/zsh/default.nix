@@ -19,4 +19,7 @@
       . $ZDOTDIR/theme.zsh
     '';
   };
+
+  home.file.".zshrc".source = ./.zshrc;
+  home.file.".zsh".source = ./.zsh;
 }

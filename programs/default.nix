@@ -15,7 +15,7 @@
     ./rtv
     ./topgrade.nix
     ./zathura.nix
-    ./zsh.nix
+    ./zsh
   ];
 
   programs = {
