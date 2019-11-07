@@ -1,4 +1,5 @@
 { pkgs, ... }: {
   home.packages = with pkgs;
-    [ aspell ] ++ (with aspellDicts; [ en en-computers ru uk ]);
+    let myAspell = (aspellWithDicts (d: with d; [ en ru uk ]));
+    in [ myAspell ];
 }

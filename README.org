@@ -1,18 +1,18 @@
-* nixos-home
+* =nixos-home=
 #+BEGIN_QUOTE
 dotfiles for Nix + home-manager (mostly for NixOS)
 #+END_QUOTE
 
 ** What's included
-The config is modular: see ~imports~ in =home.nix= for disabling parts of it.
+The configuration is modular: see ~imports~ in =home.nix= for disabling parts of it.
 
-- =config.nix=: =nix-env= configuration: allowing unfree packages, etc.
+- =config.nix=: =nix-env= configuration: allowing non-free packages, etc.
 - =email.nix=: email applications and accounts.
   I mostly rely on =mbsync= to sync my email, and keep my passwords in =gopass=.
 - =packages.nix=: a list of packages that don't require additional configuration.
 - =programs=: stuff that you run by hand.
 - =services=: stuff that runs in the background and you don't think about it.
-- =themes.nix=: GTK and Qt theme configuration.
+- =themes.nix=: GTK+ and Qt theme configuration.
 
 ** Installation
 *** NixOS
@@ -26,7 +26,7 @@ The config is modular: see ~imports~ in =home.nix= for disabling parts of it.
 #+BEGIN_SRC sh
 sudo nixos-rebuild switch
 #+END_SRC
-2. Clone this repo:
+2. Clone this repository:
 #+BEGIN_SRC sh
 git clone https://github.com/filalex77/nixos-home.git ~/.config/nixpkgs
 #+END_SRC
@@ -35,3 +35,5 @@ git clone https://github.com/filalex77/nixos-home.git ~/.config/nixpkgs
 home-manager switch
 #+END_SRC
 4. Hope and pray. (this was not tested)
+
+#  LocalWords:  dotfiles GTK nixos NixOS
