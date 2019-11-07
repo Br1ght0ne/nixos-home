@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: tests module
+# key: tm
+# condition: (doom-snippets-bolp)
+# --
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    `%`$0
+}

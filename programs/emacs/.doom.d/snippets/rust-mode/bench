@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: benchmark
+# key: bench
+# condition: (doom-snippets-bolp)
+# --
+#[bench]
+fn ${1:bench_${2:name}}(${3:b: &mut Bencher}) {
+   ${4:b.iter(|| `%`$0)}
+}

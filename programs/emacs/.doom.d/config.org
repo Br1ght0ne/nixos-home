@@ -1,0 +1,986 @@
+#+TITLE: config.el
+#+PROPERTY: header-args:emacs-lisp :tangle yes :session elisp :results silent
+
+#+BEGIN_SRC emacs-lisp
+;;; private/default/config.el -*- lexical-binding: t; -*-
+#+END_SRC
+
+* Libraries
+** dash.el
+#+BEGIN_SRC emacs-lisp
+(require 'dash)
+#+END_SRC
+** s.el
+#+BEGIN_SRC emacs-lisp
+(require 's)
+#+END_SRC
+* Look'n'feel
+** Theme
+#+BEGIN_SRC emacs-lisp
+(setq doom-theme 'doom-peacock)
+#+END_SRC
+*** ~solaire-mode~
+**** Add ~doom-peacock~
+#+BEGIN_SRC emacs-lisp
+(add-to-list '+doom-solaire-themes '(doom-peacock . t))
+#+END_SRC
+*** Treemacs, icons, etc.
+#+BEGIN_SRC emacs-lisp
+(use-package! doom-themes
+  :init
+  (setq doom-themes-treemacs-theme "doom-colors"))
+#+END_SRC
+** Fonts
+#+BEGIN_SRC emacs-lisp
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 13)
+      doom-variable-pitch-font (font-spec :family "DejaVu Sans Mono" :size 13)
+      doom-unicode-font (font-spec :family "DejaVu Sans Mono" :size 13)
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 19))
+#+END_SRC
+*** Ligatures
+#+begin_src emacs-lisp
+(setq-default +pretty-code-enabled-modes '(not elfeed-show-mode elfeed-search-mode))
+#+end_src
+** Org bullets
+#+BEGIN_SRC emacs-lisp
+(setq org-bullets-bullet-list '("#"))
+#+END_SRC
+** Pretty symbols
+*** Org-mode
+#+BEGIN_SRC emacs-lisp
+(when (featurep! :ui pretty-code)
+  (after! org
+    (set-pretty-symbols! 'org-mode
+      :name "#+NAME:"
+      :src_block "#+BEGIN_SRC"
+      :src_block_end "#+END_SRC"
+      :alist '(("[ ]" . "☐")
+               ("[X]" . "☑")
+               ("[-]" . "❍")
+               ("SCHEDULED:" . "")
+               ("DEADLINE:" . "")))))
+#+END_SRC
+* Mappings
+** Global
+#+BEGIN_SRC emacs-lisp
+(map! :n "Q" #'fill-paragraph
+      :g "M-z" #'undo
+      :g "M-s" #'save-buffer
+      :g "M-c" #'evil-yank
+      :g "M-v" #'yank
+      :g "M-E" #'kill-this-buffer
+      :g "M-w" #'+workspace/close-window-or-workspace
+      :g "M-W" #'doom/delete-frame
+      :g "M-n" #'+default/new-buffer
+      :g "M-N" #'make-frame
+      :g "M-b" #'+default/compile
+      :g "M-f" #'swiper
+      :g "M-a" #'mark-whole-buffer
+      :g "M-t" #'+workspace/switch-right
+      :g "M-T" #'+workspace/new)
+#+END_SRC
+*** Evil
+#+BEGIN_SRC emacs-lisp
+(map! :prefix "g" :n "X" #'evil-exchange-cancel)
+#+END_SRC
+*** ~C-x~ map
+#+BEGIN_SRC emacs-lisp :tangle yes
+(map! :map ctl-x-map
+      :desc "Force save all buffers" "S" (λ! (save-some-buffers t)))
+#+END_SRC
+*** Workspaces
+#+BEGIN_SRC emacs-lisp
+(map! "M-1" (λ! (+workspace/switch-to 0))
+      "M-2" (λ! (+workspace/switch-to 1))
+      "M-3" (λ! (+workspace/switch-to 2))
+      "M-4" (λ! (+workspace/switch-to 3))
+      "M-5" (λ! (+workspace/switch-to 4))
+      "M-6" (λ! (+workspace/switch-to 5))
+      "M-7" (λ! (+workspace/switch-to 6))
+      "M-8" (λ! (+workspace/switch-to 7))
+      "M-9" (λ! (+workspace/switch-to 8))
+      "M-0" #'+workspace/switch-to-last)
+#+END_SRC
+** Local leader
+#+BEGIN_SRC emacs-lisp
+(setq doom-localleader-key ",")
+(setq doom-localleader-alt-key "M-,")
+#+END_SRC
+** Leader
+*** Treemacs
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :desc "Toggle treemacs" :n "F" #'treemacs)
+#+END_SRC
+*** Open
+**** Password-store
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      (:desc "open" :prefix "o"
+        (:when (featurep! :tools password-store)
+          :desc "Password-store" :n "s"
+          (cond
+           ((featurep! :completion helm) #'helm-pass)
+           ((featurep! :completion ivy) #'+pass/ivy)
+           (t #'pass)))))
+#+END_SRC
+
+**** Applications
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      (:desc "open" :prefix "o"
+        :desc "Elfeed" :n "f" #'elfeed
+        :desc "Calculator" :n "c" #'calc
+        :desc "Calendar" :n "C" #'calendar
+        :desc "URL" :n "U" #'browse-url))
+#+END_SRC
+**** Org
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :desc "open" :prefix "o"
+      :desc "Org file" :prefix "o"
+      :desc "Inbox" :n "i" (λ! (+private/open-gtd-file "inbox"))
+      :desc "Projects" :n "p" (λ! (+private/open-gtd-file "gtd")))
+#+END_SRC
+**** Mu4e
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :desc "open" :prefix "o"
+      :desc "Mail" :n "m" #'mu4e)
+#+END_SRC
+**** Magit + yadm
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :prefix "o"
+      :desc "Dotfiles (yadm)" "y" (λ! (magit-status "/yadm::")))
+#+END_SRC
+
+*** Files
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :desc "file" :prefix "f"
+      :desc "Transfer a file" :n "t" #'+private/transfer-file
+      :desc "Transfer this file" :n "T" #'+private/transfer-this-file
+      :desc "Yank project filename" :n "Y" #'+private/yank-project-file-name
+      :desc "Config file" :n "c" #'+private/find-config-file
+      :desc "Private module" :n "p"
+      (λ!
+       (let ((default-directory (s-join "" `(,doom-modules-dir "private/default"))))
+         (call-interactively 'find-file))))
+#+END_SRC
+**** OS config
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :prefix "f"
+      :desc "OS config" :n "o"
+      (pcase (+private/distro-name)
+        ("NixOS" (lambda! (find-file "/sudo::/etc/nixos/configuration.nix")))
+        ("Gentoo" (defhydra hydra-edit-portage (:color blue)
+                    "Edit Portage conf files."
+                    ("c" (find-file "/sudo::/etc/portage/make.conf") "make.conf")
+                    ("k" (find-file "/sudo::/etc/portage/package.accept_keywords") "package.accept_keywords")
+                    ("l" (find-file "/sudo::/etc/portage/package.license") "package.license")
+                    ("m" (find-file "/sudo::/etc/portage/package.mask") "package.mask")
+                    ("p" (find-file "/sudo::/etc/portage/make.profile") "make.profile")
+                    ("u" (find-file "/sudo::/etc/portage/package.use") "package.use")))))
+#+END_SRC
+*** Windows
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :desc "window" :prefix "w"
+      :n "z" #'doom/window-zoom
+      :n "x" #'kill-buffer-and-window)
+#+END_SRC
+*** Insert
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :prefix "i"
+      :desc "Unicode character" :n "u" #'counsel-unicode-char)
+#+END_SRC
+*** Movement
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :desc "Movement" :n "M"
+      (defhydra hydra-movement (:color pink :hint nil)
+        "
+                  Move around quickly (_q_uit)
+
+                  _d_ / _u_             scroll up/down half a page
+                  _b_, _S-SPC_ / _f_, _SPC_ scroll up/down a page
+                  "
+        ("d" evil-scroll-down "down")
+        ("u" evil-scroll-up "up")
+        ("b" evil-scroll-page-up "page up")
+        ("S-SPC" evil-scroll-page-up "page up")
+        ("f" evil-scroll-page-down "page down")
+        ("SPC" evil-scroll-page-down "page down")
+        ("q" nil "quit")))
+#+END_SRC
+*** Code
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      :prefix "c"
+      :desc "Quickrun in shell" :n "s" #'quickrun-shell)
+#+END_SRC
+**** LSP code actions
+#+BEGIN_SRC emacs-lisp
+(after! lsp
+  (map! :leader
+        :prefix "c"
+        :desc "Execute code action" "a" #'lsp-execute-code-action))
+#+END_SRC
+** Elfeed
+*** Filtering
+#+BEGIN_SRC emacs-lisp
+(defun +private/elfeed-set-search-filter (&optional filter)
+  (setq elfeed-search-filter (format "@2-week-ago -ignore %s" (or filter "")))
+  (elfeed-search-update :force))
+
+(map! (:after elfeed
+        :map (elfeed-search-mode-map elfeed-show-mode-map)
+        (:desc "Filter" :prefix "f"
+          (:desc "Channels" :prefix "c"
+            :desc "Baumi" :n "l" (λ! (+private/elfeed-set-search-filter "=Baumi"))
+            :desc "Luke Smith" :n "l" (λ! (+private/elfeed-set-search-filter "=Luke"))
+            :desc "Wanderbots" :n "w" (λ! (+private/elfeed-set-search-filter "=Wanderbots")))
+          :desc "None"     :n "f" (λ! (+private/elfeed-set-search-filter))
+          :desc "Games"    :n "g" (λ! (+private/elfeed-set-search-filter "+linux +games"))
+          :desc "Linux"    :n "l" (λ! (+private/elfeed-set-search-filter "+linux -reddit"))
+          :desc "Podcasts" :n "p" (λ! (+private/elfeed-set-search-filter "+podcast"))
+          :desc "Videos"   :n "v" (λ! (+private/elfeed-set-search-filter "+video")))))
+#+END_SRC
+*** Updating
+#+BEGIN_SRC emacs-lisp
+(map! (:after elfeed
+        :map elfeed-search-mode-map
+        :n "r" #'elfeed-search-fetch-visible
+        :n "R" #'elfeed-search-fetch))
+#+END_SRC
+*** Opening links
+#+BEGIN_SRC emacs-lisp
+(map! (:after elfeed
+        :map (elfeed-search-mode-map elfeed-show-mode-map)
+        :n "o" #'elfeed-search-browse-url))
+#+END_SRC
+** Org-mode
+*** Org-agenda
+#+BEGIN_SRC emacs-lisp
+(map! :after org
+      :map org-mode-map
+      :map org-agenda-mode-map
+      ;; Movement
+      "j"     #'org-agenda-next-item
+      "k"     #'org-agenda-previous-item
+      "n"     #'org-agenda-later
+      "p"     #'org-agenda-earlier
+      "TAB"   #'org-agenda-goto
+      "."     #'org-agenda-goto-today
+      "F" #'org-agenda-follow-mode
+      "l" #'org-agenda-log-mode
+      "b" #'org-agenda-redo
+
+      ;; Filtering
+      "/"     #'org-agenda-filter-by-tag
+      "<"     #'org-agenda-filter-by-category
+      "^"     #'org-agenda-filter-by-top-headline
+      "="     #'org-agenda-filter-by-regexp
+      "_"     #'org-agenda-filter-by-effort
+      "|"     #'org-agenda-filter-remove-all
+      "T"     #'org-agenda-show-tags
+
+      ;; Actions
+      "S"     #'org-save-all-org-buffers
+      "t"     #'org-agenda-todo
+      "L"     #'org-agenda-todo-nextset
+      "H"     #'org-agenda-todo-previousset
+      "u"     #'org-agenda-undo
+      "D"     #'org-agenda-kill
+      "C"     #'org-agenda-capture
+      "R"     #'org-agenda-refile
+
+      "C-d" #'org-agenda-deadline
+      "C-s" #'org-agenda-schedule)
+
+      ;; (:desc "goto" :prefix "g"
+      ;;   "c" #'org-agenda-goto-calendar)
+
+      ;; Display
+      ;; (:desc "view" :prefix "v"
+      ;;   "c" #'org-agenda-columns
+      ;;   "d" #'org-agenda-day-view
+      ;;   "w" #'org-agenda-week-view
+      ;;   "m" #'org-agenda-month-view
+      ;;   "y" #'org-agenda-year-view
+      ;;   "g" #'org-agenda-toggle-time-grid
+      ;;   "SPC" #'org-agenda-reset-view
+      ;;   "a" #'org-agenda-archives-mode)
+
+      ;; Dates
+      ;; (:desc "dates" :prefix "d"
+      ;;   "D" #'org-agenda-kill
+      ;;   "c" #'org-agenda-date-prompt)
+
+      ;; Clocking
+      ;; (:desc "clock" :prefix "c"
+      ;;   "i" #'org-agenda-clock-in
+      ;;   "o" #'org-agenda-clock-out
+      ;;   "X" #'org-agenda-clock-cancel)
+
+#+END_SRC
+*** Local leader
+#+BEGIN_SRC emacs-lisp
+(map! (:after org
+        :map org-mode-map
+        :localleader
+        :n "RET" #'org-ctrl-c-ret
+        :n "," #'org-ctrl-c-ctrl-c
+        :n "*" #'org-ctrl-c-star
+        :n "^" #'org-sort
+        :n "." #'org-sparse-tree
+        :n "o" #'+private/org-extract-link
+        :desc "Archive subtree"  :n "a" #'org-archive-subtree-default-with-confirmation
+        :desc "Org archive" :n "A" (λ! (find-file (org-extract-archive-file)))
+        :n "d" #'org-deadline
+        :n "s" #'org-schedule
+        :n "<" #'org-time-stamp
+        :n "[" #'org-time-stamp-inactive
+        :n "C" #'org-capture
+        :n "X" #'org-capture
+        :n "R" #'org-refile
+        :n "S" #'org-save-all-org-buffers
+        :n "t" #'org-todo
+        :n ":" #'org-set-tags
+        :n "E" #'org-edit-special
+        :n "p" #'org-priority
+        :desc "Tree to indirect buffer" :n "B" #'org-tree-to-indirect-buffer
+;;         (:desc "Babel" :prefix "b"
+;;           :n "a" #'org-babel-sha1-hash
+;;           :n "b" #'org-babel-execute-buffer
+;;           :n "c" #'org-babel-check-src-block
+;;           :n "d" #'org-babel-demarcate-block
+;;           :n "e" #'org-babel-execute-maybe
+;;           :n "f" #'org-babel-tangle-file
+;;           :n "g" #'org-babel-goto-named-src-block
+;;           :n "h" #'org-babel-describe-bindings
+;;           :n "i" #'org-babel-lob-ingest
+;;           :n "j" #'org-babel-insert-header-arg
+;;           :n "k" #'org-babel-remove-result-one-or-many
+;;           :n "l" #'org-babel-load-in-session
+;;           :n "n" #'org-babel-next-src-block
+;;           :n "o" #'org-babel-open-src-block-result
+;;           :n "p" #'org-babel-previous-src-block
+;;           :n "r" #'org-babel-goto-named-result
+;;           :n "s" #'org-babel-execute-subtree
+;;           :n "t" #'org-babel-tangle
+;;           :n "u" #'org-babel-goto-src-block-head
+;;           :n "v" #'org-babel-expand-src-block
+;;           :n "x" #'org-babel-do-key-sequence-in-edit-buffer
+;;           :n "z" #'org-babel-switch-to-session-with-code)
+        (:desc "text" :prefix "x"
+          :desc "bold" :n "b" (λ! (org-emphasize ?*))
+          :desc "code" :n "c" (λ! (org-emphasize ?~))
+          :desc "italic" :n "i" (λ! (org-emphasize ?/))
+          :desc "clear" :n "r" (λ! (org-emphasize ?\ ))
+          :desc "strike-through" :n "s" (λ! (org-emphasize ?+))
+          :desc "underline" :n "u" (λ! (org-emphasize ?_))
+          :desc "verbose" :n "v" (λ! (org-emphasize ?=)))
+        (:desc "clock" :prefix "c"
+          :n "c" #'org-clock-in
+          :n "C" #'org-clock-out
+          :n "i" #'org-clock-in
+          :n "o" #'org-clock-out
+          :n "g" #'org-clock-goto
+          :desc "org-clock-goto-select" :n "G" (λ! (org-clock-goto 'select))
+          :n "x" #'org-clock-cancel)
+        (:prefix ("m" . "move")
+          :desc "move (cut)" :n "m" #'org-cut-special
+          :desc "copy"       :n "c" #'org-copy-special
+          :desc "paste"      :n "p" #'org-paste-special)
+        :desc "Move around in Org" :n "M"
+        (defhydra hydra-org-movement (:color pink :hint nil)
+          "
+  Org-mode movement (_q_uit)
+
+  _h_/_j_/_k_/_l_/_n_/_p_ move around headlines
+  _H_/_J_/_K_/_L_     move headlines around
+  "
+          ("h" org-up-element nil)
+          ("j" outline-forward-same-level nil)
+          ("k" outline-backward-same-level nil)
+          ("l" org-down-element nil)
+          ("H" org-promote-subtree nil)
+          ("J" org-metadown nil)
+          ("K" org-metaup nil)
+          ("L" org-demote-subtree nil)
+          ("n" org-forward-paragraph nil)
+          ("p" org-backward-paragraph nil)
+          ("q" nil nil))))
+#+END_SRC
+**** Evil-org
+#+BEGIN_SRC emacs-lisp
+(map! :map evil-org-mode-map
+      :localleader
+      :n "d" #'org-deadline
+      :n "s" #'org-schedule
+      :n "t" #'org-todo
+      (:prefix "c"
+        :n "c" #'org-clock-in
+        :n "C" #'org-clock-out
+        :n "i" #'org-clock-in
+        :n "o" #'org-clock-out
+        :n "g" #'org-clock-goto
+        :n "G" (λ! (org-clock-goto 'select))
+        :n "x" #'org-clock-cancel))
+#+END_SRC
+*** Move subtree up/down
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (map! :map org-mode-map
+        :n "M-j" #'org-metadown
+        :n "M-k" #'org-metaup))
+#+END_SRC
+** \LaTeX
+#+BEGIN_SRC emacs-lisp
+(map! (:after tex
+        :map TeX-mode-map
+        :localleader
+        :desc "Run a command"
+        :n doom-localleader-key #'TeX-command-master
+        :desc "View"
+        :n "v" #'TeX-view
+        :desc "Build"
+        :n "b" (λ! (save-buffer)
+                   (TeX-command-menu "LaTeX"))
+        :n "e" #'LaTeX-environment))
+#+END_SRC
+** Elisp
+*** Parinfer
+#+BEGIN_SRC emacs-lisp
+(map! (:after parinfer
+        :map parinfer-mode-map
+        :localleader
+        :desc "Toggle parinfer" :n "m" #'parinfer-toggle-mode))
+#+END_SRC
+** Company
+#+BEGIN_SRC emacs-lisp
+(map! (:after company
+        :map company-active-map
+        "C-l" #'company-complete-selection))
+
+#+END_SRC
+** Treemacs
+#+BEGIN_SRC emacs-lisp
+;; (require 'treemacs)
+#+END_SRC
+*** Switch back and forth to Treemacs
+#+BEGIN_SRC emacs-lisp
+(map! :after treemacs
+      "<f5>" #'+private/treemacs-back-and-forth)
+#+END_SRC
+** mu4e
+#+BEGIN_SRC emacs-lisp
+(after! mu4e
+  (map! :map mu4e-main-mode-map
+        :n "U" #'mu4e-update-index))
+#+END_SRC
+* Configuration
+** About me
+#+BEGIN_SRC emacs-lisp
+(setq user-full-name "Oleksii Filonenko"
+      user-mail-address "brightone@protonmail.com")
+#+END_SRC
+** General
+*** =fill-column=
+#+BEGIN_SRC emacs-lisp
+(setq-default fill-column 79)
+#+END_SRC
+** Org-mode
+#+BEGIN_SRC emacs-lisp
+(after! org
+#+END_SRC
+
+*** Variables
+#+BEGIN_SRC emacs-lisp
+(setq org-directory "~/org/"
+      org-gtd-directory (concat org-directory "gtd/")
+      org-default-notes-file (concat org-gtd-directory "gtd.org")
+      org-agenda-files (--map (concat org-gtd-directory it ".org")
+                              '("inbox" "gtd" "tickler"))
+      org-agenda-include-diary nil
+      org-agenda-custom-commands
+      (--map
+       (let* ((key (substring it 0 1))
+              (desc (format "Tasks @ %s" (s-titleize it)))
+              (at-tag (s-prepend "@" it))
+              (header `((org-agenda-overriding-header ,(s-append ":" desc)))))
+         `(,key ,desc tags-todo ,at-tag ,header))
+       '("inbox" "home" "uni" "work"))
+      org-ellipsis " ▼ "
+      org-blank-before-new-entry '((heading . nil)
+                                   (plain-list-item . nil))
+      org-capture-templates
+      (append '(("t" "Todo" entry (file "gtd/inbox.org") "* TODO %?\n%c")
+                ("T" "Tickler" entry (file+headline "gtd/tickler.org" "Tickler") "* %?\n%U")
+                ("n" "Note" entry (file+headline "Notes.org" "Notes") "* %?\n%c"))
+              (--map `(,(s-left 2 it) ,it entry (file+headline "gtd/gtd.org" ,it) "* TODO %?\n%c")
+                     '("home" "uni" "work" "reading" "watching" "listening" "doing")))
+      org-refile-targets '((nil :maxlevel . 2)
+                           (org-agenda-files :maxlevel . 2))
+      org-link-abbrev-alist '(("r" . "https://reddit.com/r/")
+                              ("gh" . "https://github.com/")
+                              ("yt" . "https://youtube.com/watch?v=")
+                              ("aw" . "https://wiki.archlinux.org/index.php?search=")
+                              ("gw" . "https://wiki.gentoo.org/index.php?search="))
+      org-global-properties '(("Effort_ALL" . "1:00 2:00 3:00 4:00 5:00 0:15 0:30 10:00 20:00 40:00")
+                              ("COOKIE_DATA" . "recursive"))
+      org-columns-default-format "%TODO(State) %50ITEM(Task) %10Effort{:} %10CLOCKSUM(Clocked)"
+      org-list-allow-alphabetical t)
+#+END_SRC
+**** Habits
+#+BEGIN_SRC emacs-lisp
+;; (require 'org-habit)
+(setq org-habit-graph-column 60)
+#+END_SRC
+*** Auto-enable ~org-mode~ for ~*.org~ files
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+#+END_SRC
+*** Update cookies
+#+BEGIN_SRC emacs-lisp
+(mapc (lambda (x)
+        (add-hook x (λ! (org-update-statistics-cookies t))))
+      '(org-after-refile-insert-hook org-capture-after-finalize-hook))
+#+END_SRC
+*** Presentations
+**** Org-reveal
+#+BEGIN_SRC emacs-lisp
+(after! ox-reveal
+  (setq +private/reveal-js-use-cdn nil
+        +private/reveal-js-version "3.8.0")
+  (setq org-reveal-root (if +private/reveal-js-use-cdn
+                            (format  "https://cdn.jsdelivr.net/npm/reveal.js@%s/" +private/reveal-js-version)
+                          (format "file://%s.assets/reveal.js-%s"
+                                  (expand-file-name org-directory) +private/reveal-js-version))
+        org-reveal-note-key-char "n"
+        org-reveal-theme "black"
+        org-reveal-transition "none"
+        org-reveal-title-slide "<h2>%t</h2>"
+        org-reveal-default-frag-style "appear"
+        org-export-with-section-numbers nil
+        org-export-with-toc nil
+        org-export-with-todo-keywords nil
+        org-export-time-stamp-file nil)
+  )
+#+END_SRC
+*** Org-habit
+#+BEGIN_SRC emacs-lisp
+(require 'org-habit)
+(add-to-list 'org-modules 'org-habit)
+#+END_SRC
+*** ~org-super-agenda~
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (org-super-agenda-mode 1)
+  (setq org-super-agenda-groups
+        '(
+          (:name "Today" :order 1
+                 :time-grid)
+          (:name "Inbox"  :tag "@inbox")
+          (:name "Work"   :tag "@work")
+          (:name "Money"  :tag "@money")
+          (:name "Uni"    :tag "@uni")
+          (:name "Home"   :tag "@home")
+          (:name "Events" :tag "@event")
+          (:name (:and :tag "@github" :todo t))
+          (:name "Current Reading" :tag "reading" :todo "NEXT")
+          (:name "Habits" :habit t)
+          (:name "Recurring" :tag "@tickler"))))
+#+END_SRC
+*** Insert state in note buffers (~org-add-note~)
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-log-buffer-setup-hook 'evil-insert-state)
+#+END_SRC
+*** Babel
+**** Add languages
+#+BEGIN_SRC emacs-lisp
+(use-package! ob-elixir
+  :after org)
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((sql . t)))
+#+END_SRC
+*** ~org-web-tools~
+#+BEGIN_SRC emacs-lisp
+(after! org-web-tools
+  (setq org-web-tools-pandoc-sleep-time 5))
+#+END_SRC
+*** Close after
+#+BEGIN_SRC emacs-lisp
+)
+#+END_SRC
+** Projectile
+*** Search path
+#+BEGIN_SRC emacs-lisp
+(after! projectile
+  (setq projectile-project-search-path '("~/dev" "~/github" "~/git")))
+#+END_SRC
+*** Priorities
+This allows for =exercism=-like setup, where we have language-specific roots
+inside of a Git repo.
+#+BEGIN_SRC emacs-lisp
+(after! projectile
+  (setq projectile-project-root-files-bottom-up
+        (remove ".git" (pushnew "Cargo.toml" projectile-project-root-files-bottom-up)))
+  (setq projectile-project-root-files-top-down-recurring
+        (pushnew ".git" projectile-project-root-files-top-down-recurring)))
+#+END_SRC
+** Eshell
+#+BEGIN_SRC emacs-lisp
+;; (require 'eshell)
+#+END_SRC
+*** Visual commands
+#+BEGIN_SRC emacs-lisp
+(setq eshell-visual-commands '(("htop") ("top") ("git" "log" "diff" "show")))
+#+END_SRC
+** Which-key
+#+BEGIN_SRC emacs-lisp
+;; (require 'which-key)
+#+END_SRC
+*** Idle delay
+#+BEGIN_SRC emacs-lisp
+(setq which-key-idle-delay 0.5)
+#+END_SRC
+** Company
+#+BEGIN_SRC emacs-lisp
+;; (require 'company)
+#+END_SRC
+*** Enable templating
+#+begin_src emacs-lisp :tangle yes
+;; (require 'company-template)
+#+end_src
+*** Idle delay
+#+BEGIN_SRC emacs-lisp
+(setq company-idle-delay 0.2)
+#+END_SRC
+*** Minimum prefix length
+#+BEGIN_SRC emacs-lisp
+(setq company-minimum-prefix-length 2)
+#+END_SRC
+** Magit
+#+BEGIN_SRC emacs-lisp
+;; (require 'magit)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(after! magit
+  (setq magit-clone-default-directory (expand-file-name "~/github/")
+        magit-repository-directories '(("~/dev/" . 4)
+                                       ("~/Documents/" . 2)
+                                       ("~/.dotfiles" . 0))))
+#+END_SRC
+*** Commit buffers
+**** Org-mode + insert state
+#+BEGIN_SRC emacs-lisp
+(--each '(evil-insert-state org-mode)
+  (add-hook 'git-commit-setup-hook it))
+#+END_SRC
+*** Forge
+**** List of supported forges
+#+BEGIN_SRC emacs-lisp
+(after! forge
+  (add-to-list 'forge-alist '("gitlab.railsreactor.com" "gitlab.railsreactor.com/api/v4" "gitlab.railsreactor.com" forge-gitlab-repository)))
+#+END_SRC
+*** TODOs
+#+BEGIN_SRC emacs-lisp
+(after! magit-todos
+  (setq magit-todos-auto-group-items 'always))
+#+END_SRC
+*** Clone via ssh by default
+#+BEGIN_SRC emacs-lisp
+(after! magit
+  (setq +magit-default-clone-url "git@github.com:%s/%s.git"))
+#+END_SRC
+
+** \LaTeX
+#+BEGIN_SRC emacs-lisp
+;; (require 'latex)
+#+END_SRC
+*** Add language support to default package list
+#+BEGIN_SRC emacs-lisp
+(setq org-latex-packages-alist '(("AUTO" "babel" t)
+                                 ("T2A" "fontenc" t)))
+#+END_SRC
+** Private
+*** ~open-link-with~
+**** Commands
+#+BEGIN_SRC emacs-lisp
+(setq +private/open-link-with-commands '(copy eww url-handler))
+#+END_SRC
+**** Qualities
+#+BEGIN_SRC emacs-lisp
+(setq +private/open-link-with-qualities '("240" "360" "480" "720" "1080"))
+#+END_SRC
+**** Set up ~browse-url~
+#+BEGIN_SRC emacs-lisp
+(setq browse-url-browser-function
+      (lambda (url new-window)
+        (interactive)
+        (+private/open-link-with url)))
+#+END_SRC
+** Elfeed
+#+BEGIN_SRC emacs-lisp
+;; (require 'elfeed)
+#+END_SRC
+*** Default filtering
+#+BEGIN_SRC emacs-lisp
+(setq elfeed-search-filter "@2-week-ago -ignore")
+#+END_SRC
+*** Elfeed-org
+#+BEGIN_SRC emacs-lisp
+;; (require 'elfeed-org)
+;; (elfeed-org)
+#+END_SRC
+**** Org files
+#+BEGIN_SRC emacs-lisp
+(setq rmh-elfeed-org-files (list (concat org-directory "elfeed.org")))
+#+END_SRC
+** Evil-snipe
+#+BEGIN_SRC emacs-lisp
+;; (require 'evil-snipe)
+#+END_SRC
+*** Turn off for some major modes
+#+BEGIN_SRC emacs-lisp
+(dolist (hook '(calc-mode-hook magit-mode-hook))
+  (dolist (it '(turn-off-evil-snipe-mode turn-off-evil-snipe-override-mode))
+    (add-hook hook it)))
+#+END_SRC
+*** Increment on tab
+#+BEGIN_SRC emacs-lisp
+(setq evil-snipe-tab-increment t)
+#+END_SRC
+*** Don't override ~,~ and ~;~ in Evil
+#+BEGIN_SRC emacs-lisp
+(setq evil-snipe-override-evil-repeat-keys nil)
+#+END_SRC
+** Web-mode
+*** Auto-close style
+| </    | 1 |
+| > </  | 2 |
+| < >/> | 3 |
+#+BEGIN_SRC emacs-lisp
+(setq web-mode-auto-close-style 1)
+#+END_SRC
+*** HTML indent
+#+BEGIN_SRC emacs-lisp
+(setq web-mode-markup-indent-offset 2)
+#+END_SRC
+*** Live EEx (.leex)
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.leex\\'" . web-mode))
+#+END_SRC
+*** Svelte
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.svelte\\'" . web-mode))
+#+END_SRC
+** Email
+#+BEGIN_SRC emacs-lisp
+(after! mu4e
+#+END_SRC
+*** Backend
+~'offlineimap~ or ~'mbsync~.
+
+#+BEGIN_SRC emacs-lisp
+(setq +mu4e-backend 'mbsync)
+#+END_SRC
+*** Accounts
+**** Protonmail
+#+BEGIN_SRC emacs-lisp
+(set-email-account! "Protonmail"
+                    '((smtpmail-smtp-user . "brightone@protonmail.com")
+                      (user-mail-address . "brightone@protonmail.com")
+                      (mu4e-maildir . "~/.mail/protonmail")
+                      (mu4e-trash-folder . "/Trash")
+                      (mu4e-sent-folder . "/Sent")
+                      (mu4e-refile-folder . "/Archive")))
+#+END_SRC
+**** Syndicode
+#+BEGIN_SRC emacs-lisp
+(set-email-account! "Syndicode"
+                    '((smtpmail-smtp-user . "oleksii.filonenko@syndicode.com")
+                      (user-mail-address . "oleksii.filonenko@syndicode.com")
+                      (mu4e-maildir . "~/.mail/syndicode")
+                      (mu4e-sent-folder . "/Sent Mail")
+                      (mu4e-drafts-folder . "/Drafts")
+                      (mu4e-trash-folder . "/Trash")
+                      (mu4e-refile-folder . "/All Mail")))
+#+END_SRC
+*** Bookmarks
+#+BEGIN_SRC emacs-lisp
+(let ((bookmarks '(("maildir:/Inbox" "Inbox" ?i)
+                   ("maildir:/Archive" "Archive" ?a))))
+  (dolist (bookmark bookmarks mu4e-bookmarks)
+    (add-to-list 'mu4e-bookmarks bookmark)))
+#+END_SRC
+*** HTML to text
+~'mu4e-shr2text~ or ~"html2text"~.
+
+#+BEGIN_SRC emacs-lisp
+(setq mu4e-html2text-command 'mu4e-shr2text)
+#+END_SRC
+*** Close after
+#+BEGIN_SRC emacs-lisp
+)
+#+END_SRC
+** Modeline
+#+BEGIN_SRC emacs-lisp
+(after! doom-modeline
+  (setq doom-modeline-major-mode-color-icon t
+        doom-modeline-buffer-file-name-style 'truncate-with-project))
+#+END_SRC
+** Elixir
+*** LSP server executable
+#+BEGIN_SRC emacs-lisp
+(after! lsp
+  (setq lsp-clients-elixir-server-executable
+        (+private-try-executable-find "elixir-ls"
+                                      "elixir-language-server"
+                                      "language_server.sh")))
+#+END_SRC
+*** Alchemist
+**** Phoenix project detection
+#+BEGIN_SRC emacs-lisp
+(defun alchemist-phoenix-project-p ()
+  "Return non-nil if `default-directory' is inside a Phoenix project."
+  (and (alchemist-project-p)
+       (file-directory-p (concat (alchemist-project-root) "lib/" (alchemist-phoenix--app-name) "_web"))
+       (file-directory-p (concat (alchemist-project-root) "lib/" (alchemist-phoenix--app-name)))))
+
+(defun alchemist-phoenix-find-web ()
+  (interactive)
+  (alchemist-phoenix-find-dir (concat "lib/" (alchemist-phoenix--app-name) "_web")))
+
+(defun alchemist-phoenix-find-views ()
+  (interactive)
+  (alchemist-phoenix-find-dir (concat "lib/" (alchemist-phoenix--app-name) "_web/views")))
+
+(defun alchemist-phoenix-find-controllers ()
+  (interactive)
+  (alchemist-phoenix-find-dir (concat "lib/" (alchemist-phoenix--app-name) "_web/controllers")))
+
+(defun alchemist-phoenix-find-channels ()
+  (interactive)
+  (alchemist-phoenix-find-dir (concat "lib/" (alchemist-phoenix--app-name) "_web/channels")))
+
+(defun alchemist-phoenix-find-templates ()
+  (interactive)
+  (alchemist-phoenix-find-dir (concat "lib/" (alchemist-phoenix--app-name) "_web/templates")))
+
+(defun alchemist-phoenix-find-models ()
+  (interactive)
+  (alchemist-phoenix-find-dir (concat "lib/" (alchemist-phoenix--app-name) "_web/models")))
+
+(defun alchemist-phoenix-find-static ()
+  (interactive)
+  (alchemist-phoenix-find-dir (concat "lib/" (alchemist-phoenix--app-name) "_web/static")))
+
+(defun alchemist-phoenix-routes (&optional prefix)
+  (interactive)
+  "Run the Mix task 'phx.routes' and list all available Phoenix routes."
+  (alchemist-mix-execute '("phx.routes") prefix))
+
+(defun alchemist-phoenix-router ()
+  "Open the 'router.ex' file from 'web' directory."
+  (interactive)
+  (unless (alchemist-phoenix-project-p)
+    (error "Could not find an Phoenix Mix project root."))
+  (find-file (concat (alchemist-project-root) "lib/" (alchemist-phoenix--app-name) "_web/router.ex")))
+
+(defun alchemist-phoenix--app-name ()
+  "Determines the Phoenix app name."
+  (file-name-nondirectory (directory-file-name (alchemist-project-root))))
+#+END_SRC
+** Ruby
+*** RSpec
+**** Disable Spring
+#+BEGIN_SRC emacs-lisp
+(after! rspec
+  (setq rspec-use-spring-when-possible nil))
+#+END_SRC
+** Shell scripts
+*** tcsh
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'auto-mode-alist '("\\.tcsh\\'" . sh-mode))
+#+END_SRC
+** COMMENT Elcord
+Discord Rich presence
+#+BEGIN_SRC emacs-lisp :tangle no
+(use-package! elcord
+  :demand t
+  :init
+  (setq elcord-display-buffer-details t
+        elcord-use-major-mode-as-main-icon t)
+  :config
+  (elcord-mode 1))
+#+END_SRC
+** Rust
+*** ABRT Disable ~whitespace-mode~
+Should be fixed in [[orgit-rev:~/.emacs.d/::b34a542ca0691345a15bac876cc96fb590200303][0200303]].
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(add-hook 'rustic-mode-local-vars-hook
+          (λ! (set (make-local-variable 'whitespace-mode) nil)))
+#+END_SRC
+** TRAMP
+*** Enable =yadm= method for Magit support
+#+BEGIN_SRC emacs-lisp
+(after! tramp
+  (add-to-list 'tramp-methods
+               '("yadm"
+                 (tramp-login-program "yadm")
+                 (tramp-login-args (("enter")))
+                 (tramp-login-env (("SHELL") ("/bin/sh")))
+                 (tramp-remote-shell "/bin/sh")
+                 (tramp-remote-shell-args ("-c")))))
+#+END_SRC
+** pdf-tools
+*** Disable evil-snipe
+#+BEGIN_SRC emacs-lisp
+(after! pdf-tools
+  (add-hook 'pdf-view-mode-hook (λ! (evil-snipe-local-mode -1))))
+#+END_SRC
+
+* Testing grounds
+** TODO Symbol overlay
+[[https://github.com/hlissner/doom-emacs/pull/1646]]
+#+BEGIN_SRC emacs-lisp
+(use-package! symbol-overlay
+  :commands 'symbol-overlay-put
+  :init
+  (map!
+   (:leader
+     :prefix "c"
+     :desc "Put symbol overlay" "o" #'symbol-overlay-put)
+   (:map symbol-overlay-map
+     [escape] #'symbol-overlay-remove-all)))
+#+END_SRC
+** TODO Dumb jump
+*** TODO NASM
+#+BEGIN_SRC emacs-lisp
+(after! dumb-jump
+  (appendq! dumb-jump-language-file-exts
+            '(:language "asm" :ext "asm" :agtype "asm" :rgtype "asm")
+            '(:language "asm" :ext "s"   :agtype "asm" :rgtype "asm")
+            '(:language "asm" :ext "S"   :agtype "asm" :rgtype "asm"))
+  (add-to-list 'dumb-jump-find-rules
+               '(:type "function" :supports ("ag grep" "rg" "git-grep") :language "asm"
+                       :regex "^\\s*JJJ\\s*:"
+                       :tests "test:" "    test: "
+                       :not "test(arg)")))
+#+END_SRC
+** TODO evil-quick-diff
+#+BEGIN_SRC emacs-lisp
+(use-package! evil-quick-diff
+  :init
+  (evil-quick-diff-install))
+#+END_SRC
