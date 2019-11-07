@@ -1,0 +1,17 @@
+* nixos-home
+
+#+BEGIN_QUOTE
+dotfiles for Nix + home-manager (mostly for NixOS)
+#+END_QUOTE
+
+** What's included
+
+The config is modular: see ~imports~ in =home.nix= for disabling parts of it.
+
+- =config.nix=: `nix-env` configuration: allowing unfree packages, etc.
+- =email.nix=: email applications and accounts.
+  I mostly rely on =mbsync= to sync my email, and keep my passwords in =gopass=.
+- =packages.nix=: a list of packages that don't require additional configuration.
+- =programs=: stuff that you run by hand.
+- =services=: stuff that runs in the background and you don't think about it.
+- =themes.nix=: GTK and Qt theme configuration.
