@@ -37,7 +37,7 @@
           white = "0xffffff";
         };
       };
-      mouse.url.launcher = ~/.local/bin/url-handler;
+      # mouse.url.launcher = ~/.local/bin/url-handler;
     };
   };
 }

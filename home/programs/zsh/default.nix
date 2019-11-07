@@ -20,6 +20,8 @@
     '';
   };
 
-  home.file.".zshrc".source = ./.zshrc;
-  home.file.".zsh".source = ./.zsh;
+  home.file.".zsh" = {
+    source = ./.zsh;
+    recursive = true;
+  };
 }
