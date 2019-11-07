@@ -16,7 +16,7 @@ The configuration is modular: see ~imports~ in =home.nix= for disabling parts of
 
 ** Installation
 *** NixOS
-1. Add =git= and =home-manager= to your ~environment.systemPackages~:
+- Add =git= and =home-manager= to your ~environment.systemPackages~:
 #+BEGIN_SRC nix
 # /etc/nixos/configuration.nix
 {
@@ -26,14 +26,14 @@ The configuration is modular: see ~imports~ in =home.nix= for disabling parts of
 #+BEGIN_SRC sh
 sudo nixos-rebuild switch
 #+END_SRC
-2. Clone this repository:
+- Clone this repository:
 #+BEGIN_SRC sh
 git clone https://github.com/filalex77/nixos-home.git ~/.config/nixpkgs
 #+END_SRC
-3. Run
+- Run
 #+BEGIN_SRC sh
 home-manager switch
 #+END_SRC
-4. Hope and pray. (this was not tested)
+- Hope and pray. (this was not tested)
 
 #  LocalWords:  dotfiles GTK nixos NixOS
