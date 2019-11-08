@@ -3,7 +3,7 @@
     ./alacritty.nix
     ./aspell.nix
     ./beets.nix
-    ./cmus.nix
+    ./cmus
     ./emacs
     ./firefox.nix
     ./git.nix
