@@ -3,7 +3,8 @@
 {
   programs.zsh = {
     enable = true;
-    enableCompletion = true;
+    # still works, but faster
+    enableCompletion = false;
     autocd = true;
     initExtraBeforeCompInit = ''
       fpath+="$HOME/.zsh/completions"
