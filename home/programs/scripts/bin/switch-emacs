@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'fileutils'
+
+LINK_ROOT = "#{Dir.home}/.local/bin"
+EMACS_D_LINK = "#{Dir.home}/.emacs.d"
+SERVER_LINK = "#{LINK_ROOT}/emacs"
+CLIENT_LINK = "#{LINK_ROOT}/emacsclient"
+
+VARIANTS = {
+  'remacs' => {
+    root: "#{Dir.home}/github/remacs",
+    server: 'src/remacs',
+    client: 'lib-src/remacsclient'
+  },
+  'system' => {
+    root: '/usr/bin'
+  },
+  'emacs-27' => {
+    root: "/usr/local/bin"
+  }
+}.freeze
+
+def enable(variant_name)
+  link_emacs_d(variant_name)
+  link_server(variant_name)
+  link_client(variant_name)
+end
+
+def link_emacs_d(variant_name)
+  FileUtils.rm(EMACS_D_LINK)
+  FileUtils.ln_s(emacs_d_path(variant_name), EMACS_D_LINK)
+end
+
+def emacs_d_path(variant_name)
+  "#{Dir.home}/.emacs.d.#{variant_name}"
+end
+
+def link_server(variant_name)
+  FileUtils.rm(SERVER_LINK)
+  FileUtils.ln_s(server_path(variant_name), SERVER_LINK)
+end
+
+def server_path(variant_name)
+  variant = VARIANTS[variant_name]
+  server = variant[:server] || 'emacs'
+  "#{variant[:root]}/#{server}"
+end
+
+def link_client(variant_name)
+  FileUtils.rm(CLIENT_LINK)
+  FileUtils.ln_s(client_path(variant_name), CLIENT_LINK)
+end
+
+def client_path(variant_name)
+  variant = VARIANTS[variant_name]
+  client = variant[:client] || 'emacsclient'
+  "#{variant[:root]}/#{client}"
+end
+
+enable(ARGV.first)

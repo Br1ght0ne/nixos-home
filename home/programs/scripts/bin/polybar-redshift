@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+
+period = `redshift -p 2>/dev/null \
+          | grep Period \
+          | cut -d' ' -f2 \
+          | sed 's/time$//'`.chomp
+_temp = `redshift -p 2>/dev/null \
+         | grep temperature \
+         | cut -d' ' -f3`.chomp
+
+icon, color = case period
+              when 'Night'
+                ['', '333133']
+              when 'Day'
+                ['', 'f64a09']
+              when 'Transition'
+                ['', '932c05']
+              end
+
+# rubocop:disable Style/FormatStringToken
+
+puts "%{u##{color}}%{+u}%{F##{color}}#{icon}%{F-} #{period}"
+
+# rubocop:enable Style/FormatStringToken

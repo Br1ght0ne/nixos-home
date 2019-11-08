@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -e
+
+mode="$1"
+config_dir="$HOME"/.config/mps-youtube
+config_path="$config_dir"/config
+
+if [ -z "$mode" ]; then
+	mode="video"
+fi
+
+first_letter=${mode:0:1}
+if [ "$first_letter" = "v" ]; then
+	mode="video"
+elif [ "$first_letter" = "a" ]; then
+	mode="audio"
+elif [ "$first_letter" = "p" ]; then
+	mode="podcast"
+else
+	printf "Wrong mode: %s. Aborting.\n" "$mode"
+	exit 1
+fi
+
+if [ -L "$config_path" ]; then
+	rm -f "$config_path"
+elif [ -f "$config_path" ]; then
+	printf "%s appears to be a file, not symlink. Backing up.\n" "$config_path"
+	backup=1
+	mv "$config_path" "$config_path".bak
+fi
+
+ln -s "$config_path.$mode" "$config_path"
+printf "Set config for mode: %s.\n" "$mode"
+
+echo "Starting mpsyt..."
+mpsyt "${@:2}"
+
+echo "Cleaning up..."
+if [ -n "$backup" ]; then
+	mv "$config_path".bak "$config_path"
+else
+	rm -f "$config_path"
+fi
+
+exit 0

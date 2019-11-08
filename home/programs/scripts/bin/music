@@ -1,0 +1,212 @@
+#!/usr/bin/env ruby
+
+load File.expand_path('~/.local/bin/polybar-colors')
+
+VOLUME_DELTA = '10%'
+
+# Methods dedicated to interacting with polybar.
+module Polybar
+  def self.polybarify(string, lhs, rhs = nil)
+    "%{#{lhs}}#{string}#{"%{#{rhs}}" if rhs}"
+  end
+
+  def self.underline(string, color)
+    polybarify(string, "u#{color} +u", 'u-')
+  end
+end
+
+# Integrating Polybar with String.
+class String
+  def self.polybarify(lhs, rhs = nil)
+    Polybar.polybarify(self, lhs, rhs)
+  end
+
+  def self.polybarify!(lhs, rhs = nil)
+    replace(polybarify(lhs, rhs))
+  end
+
+  def self.underline(color)
+    polybarify("u#{color} +u", 'u-')
+  end
+
+  def self.underline!(lhs, rhs = nil)
+    replace(underline(lhs, rhs))
+  end
+end
+
+# Generic music player.
+class Player
+  def initialize(player_name, remote_name)
+    @player_name = player_name
+    @remote_name = remote_name
+  end
+
+  def remote(opts)
+    `#{@remote_name} #{opts}`
+  end
+
+  def current_polybar
+    case status
+    when 'playing'
+      Polybar.underline(current, Polybar.colors['torch-radiant'])
+    when 'paused'
+      Polybar.underline(current, Polybar.colors['torch-dark'])
+    when 'stopped'
+      Polybar.underline(current, Polybar.colors['ash'])
+    end
+  end
+
+  def running?
+    success = system("pgrep -x #{player_name} &>/dev/null")
+    __FILE__ == $0 ? (success ? 'yes' : 'no') : success
+  end
+
+  alias running running?
+
+  def shell
+    system("pry -e 'load \"#{__FILE__}\"; player = Cmus.new'")
+  end
+
+  def lyrics
+    `beet lyrics -p #{[artist, title].map { |e| e.gsub(/\W+\s*/, ' ').downcase }.join(' ')} 2>/dev/null`
+  end
+
+  def volume_up
+    volume "+#{@volumeDelta}"
+  end
+
+  def volume_down
+    volume "-#{@volumeDelta}"
+  end
+
+  def method_missing(name, *args)
+    return super(name, *args) unless __FILE__ == $0
+
+    puts "Hell if I know what #{name} is."
+    puts "#{args[0, 3].join(', ')}... You crazy or what?" unless args.empty?
+    exit 1
+  end
+
+  def respond_to_missing?(*)
+    true
+  end
+
+  attr_reader :player_name, :remote_name
+end
+
+# C* Music Player.
+class Cmus < Player
+  def initialize
+    super('cmus', 'cmus-remote')
+  end
+
+  def play
+    remote '-p'
+  end
+
+  def pause
+    remote '-U'
+  end
+
+  def toggle
+    remote '-u'
+  end
+
+  def stop
+    remote '-s'
+  end
+
+  def next
+    remote '-n'
+  end
+
+  def prev
+    remote '-r'
+  end
+
+  def volume(value)
+    remote "-v #{value}"
+  end
+
+  def format_print(key)
+    remote("-C 'format_print %#{key}'").chomp
+  end
+
+  [%i[artist a], %i[album l], %i[title t], %i[year y]].each do |full, key|
+    define_method(full) { format_print(key) }
+  end
+
+  def current
+    artist_with_title = "#{artist} - #{title}"
+    album_suffix = " (#{album}, #{year})"
+
+    return 'cmus is stopped' if [artist, title, album].all?(&:empty?)
+
+    if (artist_with_title + album_suffix).length < 60
+      artist_with_title + album_suffix
+    else
+      artist_with_title
+    end
+  end
+
+  def status
+    remote('-Q').lines.grep(/^status/)[0].split[1]
+  end
+end
+
+# Music Player Daemon.
+class MPD < Player
+  def initialize
+    super('mpd', 'mpc')
+  end
+
+  def play
+    remote 'play'
+  end
+
+  def pause
+    remote 'pause'
+  end
+
+  def toggle
+    remote 'toggle'
+  end
+
+  def stop
+    remote 'stop'
+  end
+
+  def next
+    remote 'next'
+  end
+
+  def prev
+    remote 'prev'
+  end
+
+  def volume(value)
+    remote "volume #{value}"
+  end
+
+  def current
+    remote 'current'
+  end
+
+  def status
+    remote.lines.grep(/^\[/)[0].split[0][1...-1]
+  end
+end
+
+# Toggle players here
+players = [Cmus, MPD]
+
+if __FILE__ == $0
+  command, *args = ARGV
+  command ||= :current
+
+  result = players
+           .map(&:new)
+           .find { |player| `pgrep #{player.player_name}` }
+           .send(command, *args)
+  puts result unless result.empty?
+end

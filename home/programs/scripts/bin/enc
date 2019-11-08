@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+MOUNTS = {
+  'p' => ["#{Dir.home}/nextcloud/Vault/p", "#{Dir.home}/.encfs/p"],
+  'd' => ["#{Dir.home}/nextcloud/Vault/d", "#{Dir.home}/.encfs/d"]
+}.freeze
+
+action, mount = ARGV
+
+encrypted, decrypted =
+  if MOUNTS.key?(mount)
+    MOUNTS[mount]
+  else
+    puts "Invalid mount #{mount}."
+    exit 1
+  end
+
+command = case action
+          when /^m(ount)?/
+            "encfs #{encrypted} #{decrypted}"
+          when /^un?(mount)?/
+            "fusermount -u #{decrypted}"
+          else
+            puts "Invalid action #{action}."
+            exit 2
+          end
+
+system(command) || warn('command failed')

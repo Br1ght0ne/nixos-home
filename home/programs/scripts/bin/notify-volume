@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+vol=$(pulsemixer --get-volume | cut -d' ' -f1)
+tmpfile="/tmp/tmp.notify-pavolume"
+
+if [ -f $tmpfile ]; then
+	old_id=$(cat $tmpfile)
+	new_id=$(notify-send -r $old_id -u low -p "Volume: ${vol}%")
+else
+	new_id=$(notify-send -u low -p "Volume: ${vol}%")
+fi
+
+echo $new_id >$tmpfile

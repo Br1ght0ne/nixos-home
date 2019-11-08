@@ -1,1 +1,2 @@
-[[ -f .p10k.zsh ]] && source .p10k.zsh
+export POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
+source $ZDOTDIR/.p10k.zsh

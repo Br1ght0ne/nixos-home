@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+exec &>/dev/null
+
+pgrep -f 'sleep 3h' && { notify-send 'Sleep time cancelled' "Won't power off" && pkill -f 'sleep 3h' && exit; }
+nohup notify-send 'Sleeping for 3 hours' "Poweroff at $(date +%H:%M:%S -d '3 hours')" && sleep 3h && sudo poweroff &>/dev/null &

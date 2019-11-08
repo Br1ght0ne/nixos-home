@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+# coding: utf-8
+
+_id, classname, instance = ARGV
+
+# State
+case instance
+when 'mpv-cam'
+  puts "state=floating\nsticky=on"
+when 'libreoffice'
+  puts "state=tiled"
+#when 'Emacs-floating'
+#  puts "state=floating\nsticky=on"
+else
+  case classname
+  when 'mpv'
+    puts 'state=fullscreen'
+  when /emacs/i, 'libreoffice', 'libreoffice-writer', 'Zathura'
+    puts 'state=tiled'
+  when 'Pavucontrol', 'st-floating', 'Pinentry'
+    puts 'state=floating'
+  when 'dropdown'
+    puts "state=floating\nsticky=on"
+  end
+end
+
+# Desktops
+case classname
+when /emacs/i
+  puts "desktop=一\nfollow=off"
+when 'qutebrowser', 'Firefox'
+  puts "desktop=二\nfollow=off"
+when 'Wire', 'Riot', 'TelegramDesktop'
+  puts "desktop=五\nfollow=off"
+when 'Transmission-gtk'
+  puts "desktop=十\nfollow=off"
+end
+
+# Manage
+case classname
+when 'Screenkey'
+  puts 'manage=off'
+end

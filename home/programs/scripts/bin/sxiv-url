@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require 'tmpdir'
+
+Dir.mktmpdir('rtv') do |dir|
+  paths = ARGV.each_with_index.map do |url, i|
+    path = "#{dir}/#{i}"
+    `curl -L #{url} -o #{path}`
+    path
+  end.join(' ')
+  command = (File.exist?('/usr/bin/open')) && 'open' || 'sxiv'
+  `#{command} #{paths}`
+end

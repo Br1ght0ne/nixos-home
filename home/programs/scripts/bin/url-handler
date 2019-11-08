@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+ARGV.each do |url|
+  case url
+  when /imgur|i\.redd\.it|^https?:.*\.(jpg|png|gif)$/
+    'sxiv-url'
+  when /\.(jpg|png|gif)$/
+    'sxiv -a'
+  when /coub\.com/
+    'coub-dl'
+  when /gfycat|v\.redd\.it|youtu\.?be|\.(webm|mp4)$/
+    'mpv --loop'
+  when /^magnet:/
+    'transmission-gtk'
+  when /flatpakref$/
+    'alacritty -e flatpak install --user'
+  else
+    (File.exist?('/usr/bin/open') && 'open') || ENV['BROWSER'] || 'qutebrowser-client'
+  end.then { |action| spawn("#{action} '#{url}'") }
+end

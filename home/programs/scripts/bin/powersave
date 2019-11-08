@@ -1,0 +1,148 @@
+#!/usr/bin/env ruby
+
+#===========#
+# FUNCTIONS #
+#===========#
+
+#
+# Runs an +rfkill+ command on the device.
+#
+# @param dev [Symbol] the device to modify. +:wifi+, +:bluetooth+, etc.
+# @param enabled
+
+def rfkill(dev, enabled = false)
+  `sudo rfkill #{enabled ? 'unblock' : 'block'} #{dev}`
+end
+
+#
+# Toggle a device between +block+ and +unblock+ states.
+#
+# @param dev [Symbol] the device to modify. +:wifi+, +:bluetooth+, etc.
+
+def toggle(dev)
+  blocked = `rfkill list #{dev}`  # rfkill output
+    .lines.grep(/Soft blocked/).first  # "Soft blocked: [yes|no]"
+    .split.last == 'yes'
+  rfkill(dev, blocked)
+end
+
+#
+# Switch to a powersaving profile.
+#
+# @param profile [Symbol] name of the profile
+
+def powersave(profile = :disabled)
+  devices = $profiles[profile]
+  devices.each { |dev, enabled| rfkill(dev, enabled) }
+end
+
+#
+# Small additions to +Enumerable+ to make things easier.
+#
+
+module Enumerable
+
+  #
+  # Replace every +Regexp+ with a +String+ representation from +Regexp#inspect+.
+  #
+
+  def stringifyRegexps
+    self.map { |e| e.class == Regexp ? e.inspect : e }
+  end
+
+  #
+  # Generate a +String+ representation, using +#stringifyRegexps+.
+  #
+  # @param sep [String] string to separate elements
+
+  def printify(sep = ',')
+    self.compact.stringifyRegexps.join(sep)
+  end
+end
+
+#
+# Prints a help text.
+#
+
+def help
+  puts <<~END
+  Usage: powersave [COMMAND]
+
+  Commands:
+  #{$words.values.map(&:printify).zip([
+    "Print this help and exit",
+    "Enable powersave: wifi off, bluetooth off",
+    "Disable powersave: wifi on, bluetooth off",
+    "Ask for profile name with dmenu-like program",
+  ])
+  .map { |words, helptext| sprintf "  %-21s %-55s", words, helptext }
+  .join("\n")}
+  END
+end
+
+#
+# Prints a message about +ARGV[0]+ being wrong.
+#
+
+def wrong_arg
+  puts <<~END
+  Wrong argument: #{ARGV[0]}.
+  Expected one of: #{$words.values.flatten.printify ', '}
+  END
+end
+
+#
+# Finds a +dmenu+-like program in +$PATH+.
+#
+
+def autodmenu
+  ['rofi -dmenu', 'dmenu'].find { |launcher| `which #{launcher.split.first}`; $?.success? }
+end
+
+#==============#
+# USER-DEFINED #
+#==============#
+
+# $dmenu = 'rofi -dmenu'
+$dmenu = autodmenu unless $dmenu
+
+$profiles = {
+  disabled: {
+    bluetooth: false,
+    wifi: true,
+  },
+  enabled: {
+    bluetooth: false,
+    wifi: false,
+  },
+  alwayson: {
+    bluetooth: true,
+    wifi: true,
+  }
+}
+
+#======#
+# BODY #
+#======#
+
+$words = {
+  help: ['help', 'usage'],
+  enabled: ['on', /enabled?/],
+  disabled: ['off', /disabled?/, nil],
+  dmenu: ['ask', 'dmenu', 'rofi'],
+}
+
+case ARGV[0]
+when *$words[:help]
+  help
+  exit 0
+when *$words[:dmenu]
+  powersave `echo '#{$profiles.keys.map(&:to_s).join("\n")}' | #{$dmenu} -p "powersave profile"`.chomp.to_sym
+when *$words[:enabled]
+  powersave :enabled
+when *$words[:disabled]
+  powersave :disabled
+else
+  wrong_arg
+  exit 1
+end

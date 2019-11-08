@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+from_format, to_format, target_dir, *rest = ARGV
+
+if rest.empty?
+  $stdin.readlines.map(&:chomp)
+else
+  rest.collect do |entry|
+    if File.directory?(entry)
+      Dir.entries(entry)
+         .select { |inner_entry| /\.#{from_format}$/ =~ inner_entry }
+         .map { |file| File.join(entry, file) }
+    else
+      File.join(Dir.pwd, entry)
+    end
+  end
+end.flatten.each do |inp|
+  out = File.basename(inp).gsub(/\.#{from_format}"?$/, '')
+  command = "ffmpeg -i #{inp} \"#{File.join(target_dir, out)}.#{to_format}\""
+  puts command
+  `#{command} &>/dev/null`
+end

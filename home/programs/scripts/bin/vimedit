@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+file=$(mktemp --suffix=.md)
+
+echo -n | xclip -sel clip
+sleep 0.2s
+xdotool key ctrl+a ctrl+x
+xclip -sel clip -o >"$file"
+emacsclient -c -F "'(name . \"Emacs-floating\")'" "$file"
+# perl -pe 'chomp if eof' <"$file" | xclip -sel clip
+xclip -r -sel clip <"$file"
+sleep 0.2s
+xdotool key ctrl+v
+
+rm "$file"

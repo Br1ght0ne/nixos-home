@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+# A wrapper for qutebrowser to open links faster
+# Tested on Ruby 2.3+
+# Usage:
+#   $ qutebrowser-client [urls ... ]
+
+require 'digest'
+require 'json'
+require 'socket'
+
+PROTOCOL_VERSION = 1
+
+def help(exit_code: 1)
+  puts "Usage: #{$PROGRAM_NAME} [urls ... ]"
+  exit(exit_code)
+end
+
+def run_dir
+  ENV['XDG_RUNTIME_DIR'] || "/run/user/#{ENV['UID']}"
+end
+
+def ipc_hash
+  Digest::MD5.hexdigest(ENV['USER'])
+end
+
+def socket_path
+  "#{run_dir}/qutebrowser/ipc-#{ipc_hash}"
+end
+
+def request(url)
+  JSON.generate(args: [url],
+                target_arg: :tab,
+                protocol_version: PROTOCOL_VERSION)
+end
+
+def open_in_existing(urls)
+  socket = UNIXSocket.new(socket_path)
+  urls.each { |url| socket.puts(request(url)) }
+end
+
+def open_in_new(urls)
+  spawn("qutebrowser #{urls.join(' ')}")
+end
+
+if $PROGRAM_NAME == __FILE__
+  help(exit_code: 1) if ARGV.empty?
+
+  if File.exist?(socket_path)
+    warn 'Found IPC socket, sending urls'
+    open_in_existing(ARGV)
+  else
+    warn 'No IPC socket found, starting qutebrowser'
+    open_in_new(ARGV)
+  end
+end

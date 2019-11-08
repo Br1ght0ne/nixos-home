@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+url=$(xclip -o)
+umpv "$url"

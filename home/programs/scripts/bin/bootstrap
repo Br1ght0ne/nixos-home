@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+###
+# Disclaimer: comments are very dumb, as much as my custom $cripts.
+# Use at your own risk.
+#
+#
+# But you better don't.
+###
+
+###
+# Variables
+###
+
+# Local script directory
+scriptdir="$HOME/.local/bin"
+
+###
+# Helper functions
+###
+
+# Execute only if not running.
+# $1 - program name to start
+x() {
+	pgrep "$1" &>/dev/null || "$@" &
+}
+
+# Just as x(), only with custom process name.
+# $1 - string to 'pgrep'
+# $2 - program name to start
+xc() {
+	pgrep "$1" &>/dev/null || "${@:2}" &
+}
+
+# Complement to x(): execute $2 only if $1 is running.
+# $1 - program that must be running, checked with 'pgrep'
+# $2 - program name to start
+xnc() {
+	pgrep "$1" &>/dev/null && "${@:2}" &
+}
+
+xnc bspwm feh --bg-scale $HOME/pics/wallpapers/city1.png        # set wallpaper
+
+x syncthing-gtk                                                 # sync your files
+
+"$scriptdir/layout" us                                          # i'm a madman with custom layered layouts
+
+"$scriptdir/powersave" off                                      # look at me, I can code!

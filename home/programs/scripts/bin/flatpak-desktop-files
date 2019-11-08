@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+`flatpak list --user`.lines.drop(1).each do |line|
+  name, app_id, version, branch, origin = line.split
+  filename = File.join(Dir.home, '.local', 'share', 'applications', "flatpak-#{app_id}.desktop")
+  File.open(filename, 'w') do |file|
+    contents = <<~DESKTOP
+      [Desktop Entry]
+      Encoding=UTF-8
+      Value=1.0
+      Type=Application
+      Name=#{name}
+      Exec=/usr/bin/flatpak run --user #{app_id}
+      Categories=Flatpak;
+    DESKTOP
+    file.write(contents)
+  end
+end

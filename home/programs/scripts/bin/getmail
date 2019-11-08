@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+mbsync protonmail
+mu index --maildir ~/.mail/protonmail

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+TMP=$(mktemp "tmp.$(basename "$0").XXXX")
+cmus-remote -C "save -q -" >>"$TMP"
+vim "$TMP"
+(
+	echo 'clear -q'
+	sed 's/^/add -q /' "$TMP"
+) | cmus-remote

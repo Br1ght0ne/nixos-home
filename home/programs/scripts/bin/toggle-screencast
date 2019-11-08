@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+command='screenkey -p fixed -g 381x186+0+581'
+pkill -f screenkey || $command

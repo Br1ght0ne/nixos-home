@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+encrypted=$(realpath "$1")
+dir=$(mktemp -d)
+gpgid=brightone@protonmail.com
+
+name=$(basename "$encrypted")
+name=${name%%.*}
+
+cd $dir
+gpg-zip --decrypt "$encrypted" &>/dev/null
+ranger $dir
+cd $dir
+gpg-zip --encrypt -r $gpgid -o "$encrypted" $name
+rm -rf $dir

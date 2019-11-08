@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+POLYBAR_CONFIG = "~/.config/polybar/config"
+HEX_PATTERN = '#[a-fA-F0-9]{3,8}'
+VAR_PATTERN = '\$\{\w+\.(\w+)\}'
+
+module Polybar
+  def Polybar.colors
+    colors = File.open(File.expand_path(POLYBAR_CONFIG))
+      .readlines
+      .drop_while { |line| !(line =~ /\[colors\]/) }
+      .drop(1)
+      .map(&:chomp)
+      .take_while { |line| line =~ /\w+\s*=\s*(#{HEX_PATTERN}|#{VAR_PATTERN})/ }
+      .map(&:split)
+      .each { |line| line.delete('=') }
+      .to_h
+     colors.map { |name, code| [name, (/#{VAR_PATTERN}/ =~ code ? colors[$1] : code)]}.to_h
+  end
+end
+
+if __FILE__ == $0
+  puts Polybar.colors.to_a.map { |l| l.join(' = ') }.join("\n")
+end

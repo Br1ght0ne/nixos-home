@@ -40,8 +40,8 @@
     font-awesome_5
     iosevka
     material-icons
-    # nerdfonts
     noto-fonts-cjk
+    source-han-sans-japanese
   ];
 
   hardware = {
@@ -60,11 +60,13 @@
 
   programs = {
     dconf.enable = true;
+    gnupg.agent.enable = true;
     iotop.enable = true;
     mosh.enable = true;
     mtr.enable = true;
     light.enable = true;
     thefuck.enable = true;
+    zsh.enable = true;
   };
 
   # Users in 'wheel' can sudo without password.

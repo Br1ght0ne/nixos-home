@@ -1,0 +1,8 @@
+keycode 108 = Mode_switch
+keycode 94 = Return
+clear Lock
+keysym Caps_Lock  = Escape
+keysym Escape = Caps_Lock
+add Lock = Caps_Lock
+keysym Menu = Super_R
+keysym BackSpace = BackSpace BackSpace Terminate_Server Terminate_Server

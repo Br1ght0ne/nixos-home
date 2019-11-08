@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+overlays=$(layman -l | awk '{print $2}')
+for o in $overlays; do
+	packages=$(eix --installed-in-overlay "$o" --only-names)
+	for p in $packages; do
+		if grep -q "$p" /var/lib/portage/world; then
+			echo "$p::$o is in @world"
+			continue
+		elif
+			equery -q d "$p" >/dev/null
+		then
+			echo "$p::$o has dependents"
+			continue
+		else
+			echo "$p::$o has no dependents, removing"
+		fi
+	done
+done

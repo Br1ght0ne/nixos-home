@@ -1,0 +1,8 @@
+#!/bin/sh
+
+
+export vblank_mode=0
+
+export WINEPREFIX=$HOME/.wine
+
+wine $HOME/.wine/drive_c/users/$USER/Local\ Settings/Application\ Data/osu\!/osu\!.exe "$@"

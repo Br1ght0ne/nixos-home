@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+(
+cd /tmp
+[ -z "$1" ] && exit 88
+URL=$1
+FILENAME="$(youtube-dl --restrict-filenames -f 'html5-video-med[ext=mp4]' --get-filename -o "%(title)s-%(id)s.%(ext)s" "$URL")"
+[ -e "$FILENAME" ] && echo -e "Already downloaded $URL" &&  exit 0
+if youtube-dl --list-formats "${URL}" | /bin/grep html5-audio &>/dev/null; then
+    youtube-dl -q --add-metadata --restrict-filenames -f 'html5-video-med[ext=mp4]+html5-audio-high[ext=mp3]' --merge-output-format FAKE -o "%(title)s-%(id)s.%(ext)s" "$URL" &>/dev/null
+    printf '\x00\x00' | dd of=$(youtube-dl --restrict-filenames -f 'html5-video-med[ext=mp4]' --get-filename -o "%(title)s-%(id)s.f%(format_id)s.%(ext)s" "$URL") bs=1 count=2 conv=notrunc &>/dev/null
+    youtube-dl  --restrict-filenames --add-metadata --prefer-ffmpeg --postprocessor-args '-shortest' -f 'html5-video-med[ext=mp4]+html5-audio-high[ext=mp3]' --exec 'touch {}' -o "%(title)s-%(id)s.%(ext)s" "$URL" &>/dev/null
+else
+    youtube-dl -q --restrict-filenames --add-metadata --prefer-ffmpeg -f 'html5-video-med[ext=mp4]' --exec "printf '\x00\x00' | dd of={} bs=1 count=2 conv=notrunc" -o "%(title)s-%(id)s.%(ext)s"  "$URL" &>/dev/null
+fi
+mpv --loop "$FILENAME"
+rm -f "$FILENAME"
+)

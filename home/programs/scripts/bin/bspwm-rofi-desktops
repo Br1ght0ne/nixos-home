@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+desktops=$(bspc query -D --names | nl -w 2)
+
+if [ "$@" ]; then
+	desktop=$(echo "$@" | rev | cut -f 1 | rev)
+	bspc desktop -f "$desktop"
+else
+	echo "$desktops"
+fi

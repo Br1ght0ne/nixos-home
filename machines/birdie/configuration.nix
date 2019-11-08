@@ -3,11 +3,12 @@
 {
   imports =
     [ 
+      <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
       ../../configuration.nix
       ../../profiles/efi.nix
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -29,16 +30,15 @@
   nix.maxJobs = lib.mkDefault 8;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 
-  networking = {
-    hostName = "birdie";
-
-    # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-    # Per-interface useDHCP will be mandatory in the future, so this generated config
-    # replicates the default behaviour.
-    useDHCP = false;
-    interfaces.enp4s0.useDHCP = true;
-    interfaces.wlp5s0.useDHCP = true;
-  };
+  networking.hostName = "birdie";
 
   services.fprintd.enable = true;
+  services.illum.enable = true;
+
+  home-manager.users.brightone = { pkgs, ... }: {
+    services.polybar.config."bar/main" = {
+      monitor = "eDP-1";
+      height = "3%";
+    };
+  };
 }

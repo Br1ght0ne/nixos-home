@@ -11,8 +11,10 @@
     ./mpv.nix
     ./ranger
     ./ripgrep.nix
+    ./rofi
     ./rofi-pass.nix
     ./rtv
+    ./scripts
     ./topgrade.nix
     ./zathura.nix
     ./zsh
@@ -20,6 +22,7 @@
 
   programs = {
     bash.enable = true;
+    bat.enable = true;
     broot.enable = true;
     command-not-found.enable = true;
     direnv.enable = true;
@@ -29,10 +32,6 @@
     htop.enable = true;
     jq.enable = true;
     kakoune.enable = true;
-    rofi = {
-      enable = true;
-      theme = "DarkestDungeon";
-    };
     skim.enable = true;
     vim.enable = true;
   };

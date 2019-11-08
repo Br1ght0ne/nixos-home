@@ -3,10 +3,6 @@
 
   services = {
     compton.enable = true;
-    gpg-agent = {
-      enable = true;
-      enableSshSupport = true;
-    };
     keybase.enable = true;
     network-manager-applet.enable = true;
     pasystray.enable = true;

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+pkill -f /dev/video0 || mpv -x11-name=mpv-cam --geometry=-0-0 --autofit=25% --no-osc /dev/video0

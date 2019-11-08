@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+MAP_DIR="$HOME/.xmodmap"
+
+LAYOUT=$1
+BASE_MAP_FILE="$MAP_DIR/base.map"
+BASE_MAP_ENABLED=1
+ADD_MAP_FILE="$MAP_DIR/$LAYOUT.map"
+NOTIFICATION_ENABLED=0
+
+case "$LAYOUT" in
+dvp)
+	setxkbmap us -variant dvp
+	;;
+vanilla)
+	setxkbmap us
+	BASE_MAP_ENABLED=0
+	NOTIFICATION_ENABLED=1
+	;;
+*)
+	setxkbmap "$LAYOUT"
+	;;
+esac
+
+printf "Set layout %s.\\n" "$LAYOUT"
+if [ $NOTIFICATION_ENABLED = 1 ]; then
+	notify-send --urgency=LOW "Layout: $LAYOUT"
+fi
+
+if [ $BASE_MAP_ENABLED = 1 ]; then
+	xmodmap "$BASE_MAP_FILE"
+	echo "Loaded base map."
+else
+	echo "Skipped base map."
+fi
+
+if [ -f "$ADD_MAP_FILE" ]; then
+	xmodmap "$ADD_MAP_FILE"
+	printf "Loaded additional map %s.\\n" "$(basename "$ADD_MAP_FILE")"
+fi

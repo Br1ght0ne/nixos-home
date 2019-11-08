@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+branch="${1:-master}"
+git branch --merged "$branch" | grep -v "\* $branch" | xargs -r -n 1 git branch -d

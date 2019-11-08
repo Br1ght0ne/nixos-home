@@ -47,7 +47,6 @@
       libreoffice-fresh
 
       # other ART (Awesome Rust Tools)
-      bat
       exa
       diskus
       du-dust

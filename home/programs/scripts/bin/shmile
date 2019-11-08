@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+MACROS = [
+  ['Shrug', '¯\\_(ツ)_/¯']
+].freeze
+DMENU = 'rofi -dmenu'.freeze
+XCLIP = 'xclip -sel clip'.freeze
+
+input = MACROS.map { |word, smile| "'#{word} | #{smile}'" }.join("\n")
+
+`echo #{input} | #{DMENU}`
+  .split(' | ').last
+  .then { |chosen| `echo -n '#{chosen.tr(" \n", '')}' | #{XCLIP}` }

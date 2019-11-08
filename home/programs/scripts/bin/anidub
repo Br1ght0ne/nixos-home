@@ -1,0 +1,121 @@
+#!/usr/bin/env python3.6
+
+import re
+import textwrap
+import sys
+from subprocess import run
+from collections import namedtuple
+from bs4 import BeautifulSoup
+import requests
+
+ROOT = 'https://online.anidub.com'
+SearchResult = namedtuple('SearchResult', 'title url img desc')
+Episode = namedtuple('Episode', 'title url')
+
+def search(query: str) -> [SearchResult]:
+    payload = {'query': query}
+    r = requests.post(f'{ROOT}/engine/ajax/search.php', data=payload)
+    soup = BeautifulSoup(r.text, 'lxml')
+
+    heading_tags = soup.select('.searchheading')
+    link_tags = [tag.find_next('a') for tag in heading_tags]
+    image_tags = [tag.find_next('img') for tag in link_tags]
+    description_tags = [tag.find_next('span') for tag in image_tags]
+
+    titles = [re.sub(r'\s*\.{2,}\s*$', '', tag.text) for tag in heading_tags]
+    urls = [tag['href'] for tag in link_tags]
+    imgs = [tag['src'] for tag in image_tags]
+    descs = [
+            re.sub(r'\s*\.{2,}\s*$', '', tag.text) for tag in description_tags
+            ]
+
+    results = [
+            SearchResult(title, url, img, desc)
+            for (title, url, img, desc) in zip(titles, urls, imgs, descs)
+            ]
+    return results
+
+def episodes(url: str) -> [Episode]:
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, 'lxml')
+    select = soup.select('#sel3')[0]
+    episodes = [
+            Episode(option.text, re.sub(r'\|\d+', '', option['value']))
+            for option in select.contents
+            ]
+    return episodes
+
+def watch_url(episode: str):
+    print('Enjoy!')
+    run(['umpv', episode])
+
+def down_url(url: str):
+    print('Downloading...')
+    run(['youtube-dl', '-f', 'best', url])
+    print('Done!')
+
+def rename(title):
+    eng = re.search(r'([a-zA-Z0-9_]+(?: [a-zA-Z0-9_]+)*)', title)
+    if eng:
+        eng = eng.group(1)
+    else:
+        raise 'no English title'
+    run([r'perl-rename', r'"s/[a-zA-Z0-9_]*_(\d)(\.mp4-)?.mp4/{}_\1.mp4/"'.format(eng), r'*'])
+
+def get_int() -> int:
+    i = input('> ')
+    if i.isdigit():
+        return int(i) - 1
+    else:
+        raise 'not a digit'
+
+def is_range(s):
+    return re.match(r'(\d+)?-(\d+)?', s)
+
+def act_for_spec(urls, action, spec: str):
+    match = is_range(spec)
+    if match:
+        start, end = match.groups()
+        if start:
+            start = int(start) - 1
+        if end:
+            end = int(end)
+        for url in urls[start:end]:
+            action(url)
+    elif spec.isdigit():
+        action(urls[int(spec) - 1])
+    else:
+        raise 'wrong spec'
+
+def play(query: str):
+    results = search(query)
+    for i, result in enumerate(results):
+        print(f'{i+1} - {result.title}')
+    i = get_int()
+    r = results[i]
+    results = episodes(r.url)
+    print('\n'.join(textwrap.wrap(r.desc)), '\n')
+    while True:
+        for i, (title, _) in enumerate(results):
+            print(f'{i+1} - {title}')
+        command, idx_spec = input('> ').split()
+        if command.startswith('d'):
+            act_for_spec([r[1] for r in results], down_url, idx_spec)
+            print('Renaming...')
+            rename(r.title)
+            print('Done!')
+            # down_url(results[int(idx)][1])
+        elif command.startswith('p'):
+            act_for_spec([r[1] for r in results], watch_url, idx_spec)
+            # watch_url(results[int(idx)][1])
+
+
+if __name__ == '__main__':
+    try:
+        query = sys.argv[1]
+    except IndexError:
+        query = input('> ')
+    try:
+        play(query)
+    except KeyboardInterrupt:
+        print('\n\nBye!')

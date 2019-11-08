@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+$launcher = "rofi -dmenu"
+
+`sudo #{`echo "poweroff\nsuspend" | #{$launcher} -p "action"`}`

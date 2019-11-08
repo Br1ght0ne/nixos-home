@@ -1,8 +1,38 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   services.polybar = {
     enable = true;
     package = pkgs.polybarFull;
-    # config = {};
+    config = {
+      "bar/main" = {
+        enable-ipc = true;
+        locale = "en_US.UTF-8";
+        bottom = false;
+        fixed-center = true;
+        background = "\${colors.background}";
+        foreground = "\${colors.foreground}";
+        line-size = 2;
+        line-color = "#f00";
+        modules-left = "bspwm keyboard cmus pulseaudio";
+        modules-center = "date";
+        modules-right = "wireless battery brightness";
+        padding-left = 0;
+        padding-right = 0;
+        module-margin = 1;
+        font-0 = "Iosevka Light:pixelsize=10;1";
+        font-1 = ''"Font Awesome 5 Free:style=Regular:size=11;2"'';
+        font-2 = ''"Font Awesome 5 Free:style=Solid:size=11;2"'';
+        font-3 = ''"Font Awesome 5 Brands:style=Regular:size=11;2"'';
+        font-4 = ''"Source Han Sans JP:style=Regular:size=11;2"'';
+        font-5 = "MaterialIcons:size=12;2";
+        tray-position = "right";
+        tray-detached = false;
+        tray-padding = 6;
+        tray-maxsize = 16;
+        wm-restack = "bspwm";
+        scroll-up = "bspwm-desknext";
+        scroll-down = "bspwm-deskprev";
+      };
+    };
     extraConfig = ''
       [colors]
       background = #5a000000
@@ -58,51 +88,6 @@
 
       wm-restack = bspwm
 
-      [bar/simple]
-      enable-ipc = true
-      locale = en_US.UTF-8
-      monitor = LVDS-1
-
-      # width = 90%
-      height = 28
-      # offset-x = 5%
-      # offset-y = 0
-      bottom = false
-      fixed-center = true
-
-      background = ''${colors.background}
-      foreground = ''${colors.foreground}
-
-      line-size = 2
-      line-color = #f00
-
-      modules-left = bspwm keyboard cmus pulseaudio
-      modules-center = date
-      modules-right = wireless battery brightness
-      ; border-size = 5
-      ; border-color = #00000000
-
-      padding-left = 0
-      padding-right = 0
-
-      module-margin = 1
-
-      font-0 = Iosevka Light:pixelsize=10;1
-      font-1 = "Font Awesome 5 Free:style=Regular:size=11;2"
-      font-2 = "Font Awesome 5 Free:style=Solid:size=11;2"
-      font-3 = "Font Awesome 5 Brands:style=Regular:size=11;2"
-      # font-4 = Noto Sans CJK JP:style=Regular:size=11;2
-      font-4 = Source Han Sans JP:style=Regular:size=11;2
-      font-5 = MaterialIcons:size=12;2
-      tray-position = right
-      tray-detached = false
-      tray-padding = 6
-      tray-maxsize = 16
-
-      wm-restack = bspwm
-      scroll-up = bspwm-desknext
-      scroll-down = bspwm-deskprev
-
       [module/wired]
       type = internal/network
       interface = enp2s0
@@ -121,7 +106,7 @@
 
       [module/wireless]
       type = internal/network
-      interface = wlp3s0
+      interface = wlp5s0
       format-connected = <label-connected>
       format-disconnected = <label-disconnected>
       format-disconnected-underline = ''${colors.ash}
@@ -410,6 +395,6 @@
       scroll-up = ~/.local/bin/music prev
       scroll-down = ~/.local/bin/music next
     '';
-    script = "polybar -r simple &";
+    script = "polybar -r main &";
   };
 }

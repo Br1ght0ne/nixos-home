@@ -1,0 +1,11 @@
+#!/bin/sh
+
+path="$1"
+
+if [ -z $path ]; then
+    path="$HOME/Downloads"
+fi
+
+cp $path/*.osz "/home/$USER/.wine/drive_c/users/$USER/Local Settings/Application Data/osu!/Songs"
+rm -rf $path/*.osz
+echo 'Done'
