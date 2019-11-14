@@ -24,6 +24,7 @@
       pavucontrol
       pciutils
       pmutils
+      qt5.qtwayland
       unzip
       vim
       wget
@@ -41,6 +42,7 @@
     iosevka
     material-icons
     noto-fonts-cjk
+    powerline-fonts
     source-han-sans-japanese
   ];
 
@@ -65,6 +67,23 @@
     mosh.enable = true;
     mtr.enable = true;
     light.enable = true;
+    ssh.startAgent = true;
+    sway = {
+      enable = true;
+      extraPackages = with pkgs; [
+        swaylock
+        swayidle
+        xwayland
+        i3status
+        i3status-rust
+      ];
+      extraSessionCommands = ''
+        export SDL_VIDEODRIVER=wayland
+        export QT_QPA_PLATFORM=wayland
+        export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+        export _JAVA_AWT_WM_NONREPARENTING=1
+      '';
+    };
     thefuck.enable = true;
     zsh.enable = true;
   };
@@ -81,12 +100,6 @@
     dbus.packages = [ pkgs.gnome3.dconf ];
     geoclue2.enable = true;
     flatpak.enable = true;
-    xserver = {
-      enable = true;
-      # Enable touchpad support.
-      libinput.enable = true;
-      windowManager.bspwm.enable = true;
-    };
   };
 
   sound = {

@@ -32,5 +32,8 @@
     };
     userName = "Oleksii Filonenko";
     userEmail = "brightone@protonmail.com";
+    extraConfig = {
+      github.user = "filalex77";
+    };
   };
 }

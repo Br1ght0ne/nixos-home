@@ -12,11 +12,8 @@
       steam-run = (steamWithLibs.override { nativeOnly = true; }).run;
     in [
       # desktop
-      betterlockscreen
-      maim
+      libnotify
       neofetch
-      slop
-      wmname
 
       # shells
       antibody
@@ -34,13 +31,14 @@
       nodejs
       python3
       ruby
-      rustup
       shellcheck
       shfmt
+      stack
       wakatime
 
       # nix stuff
       nixfmt
+      nix-prefetch-github
       nix-review
 
       # documents
@@ -54,6 +52,7 @@
       hexyl
       just
       lsd
+      pastel
       sd
       tealdeer
       tokei

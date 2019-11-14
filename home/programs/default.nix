@@ -8,12 +8,15 @@
     ./firefox.nix
     ./git.nix
     ./home-manager.nix
+    ./jetbrains.nix
     ./mpv.nix
     ./ranger
     ./ripgrep.nix
     ./rofi
     ./rofi-pass.nix
     ./rtv
+    ./ruby.nix
+    ./rust
     ./scripts
     ./topgrade.nix
     ./zathura.nix
@@ -26,13 +29,16 @@
     broot.enable = true;
     command-not-found.enable = true;
     direnv.enable = true;
-    feh.enable = true;
     go.enable = true;
     gpg.enable = true;
     htop.enable = true;
     jq.enable = true;
     kakoune.enable = true;
     skim.enable = true;
+    starship = {
+      enable = true;
+      settings = { };
+    };
     vim.enable = true;
   };
 }

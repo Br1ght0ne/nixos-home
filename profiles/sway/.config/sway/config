@@ -1,0 +1,270 @@
+## Variables
+
+set {
+    # Logo key. Use Mod1 for Alt.
+    $mod Mod4
+    # Home row direction keys, like vim
+    $left h
+    $down j
+    $up k
+    $right l
+
+    # Your preferred terminal emulator
+    $term alacritty
+
+    # Your preferred application launcher
+    $menu rofi -show drun
+}
+
+## Settings
+
+default_border pixel 1
+
+# Drag floating windows by holding down $mod and left mouse button.
+# Resize them with right mouse button + $mod.
+# Despite the name, also works for non-floating windows.
+# Change normal to inverse to use left mouse button for resizing and right
+# mouse button for dragging.
+floating_modifier $mod normal
+
+gaps inner 10
+smart_gaps on
+smart_borders on
+
+## Output configuration
+# You can get the names of your outputs by running: swaymsg -t get_outputs
+
+output eDP-1 {
+    mode 1920x1080
+    pos 0 0
+}
+
+output "Dell Inc. DELL P2419HC 6LZCJQ2" {
+    mode 1920x1080
+    pos 1920 0
+}
+
+bindswitch lid:on output eDP-1 disable
+bindswitch lid:off output eDP-1 enable
+
+## Autostart
+
+exec {
+    # This will lock your screen after 300 seconds of inactivity, then turn off
+    # your displays after another 300 seconds, and turn your screens back on when
+    # resumed. It will also lock your screen before your computer goes to sleep.
+    swayidle -w \
+      timeout 300 'swaylock -f' \
+      timeout 600 'swaymsg "output * dpms off"' \
+      resume 'swaymsg "output * dpms on"' \
+      before-sleep 'swaylock -f'
+    # kanshi
+    mako
+}
+
+## Input configuration
+# You can get the names of your inputs by running: swaymsg -t get_inputs
+# Read `man 5 sway-input` for more information about this section.
+
+input type:keyboard {
+    xkb_layout us,ru,ua
+    xkb_options grp:alt_shift_toggle,caps:swapescape
+}
+
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    tap_button_map lrm
+}
+
+# Default seat configuration
+seat seat0 {
+    hide_cursor 3000
+}
+
+## Key bindings
+
+bindsym --to-code {
+    # start a terminal
+    $mod+Return exec $term
+    # kill focused window
+    $mod+Shift+q kill
+
+    # start your launcher
+    $mod+d exec $menu
+    $mod+p exec rofi-pass
+
+    # lock the screen
+    $mod+Delete exec swaylock -f
+
+    # reload the configuration file
+    $mod+Shift+c reload
+
+    # exit sway (logs you out of your Wayland session)
+    $mod+Shift+e exec swaymsg exit
+
+    XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+    XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+    XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+    # Printscreen
+    --release Print exec grim -g "$(slurp)" - | wl-copy -t image/png
+
+    # Move your focus around
+    $mod+$left focus left
+    $mod+$down focus down
+    $mod+$up focus up
+    $mod+$right focus right
+    # or use $mod+[up|down|left|right]
+    $mod+Left focus left
+    $mod+Down focus down
+    $mod+Up focus up
+    $mod+Right focus right
+
+    # _move_ the focused window with the same, but add Shift
+    $mod+Shift+$left move left
+    $mod+Shift+$down move down
+    $mod+Shift+$up move up
+    $mod+Shift+$right move right
+    # ditto, with arrow keys
+    $mod+Shift+Left move left
+    $mod+Shift+Down move down
+    $mod+Shift+Up move up
+    $mod+Shift+Right move right
+
+    ## Workspaces:
+
+    # switch to workspace
+    $mod+Tab workspace back_and_forth
+    $mod+1 workspace 1
+    $mod+2 workspace 2
+    $mod+3 workspace 3
+    $mod+4 workspace 4
+    $mod+5 workspace 5
+    $mod+6 workspace 6
+    $mod+7 workspace 7
+    $mod+8 workspace 8
+    $mod+9 workspace 9
+    $mod+0 workspace 10
+
+    # move focused container to workspace
+    $mod+Shift+1 move container to workspace 1
+    $mod+Shift+2 move container to workspace 2
+    $mod+Shift+3 move container to workspace 3
+    $mod+Shift+4 move container to workspace 4
+    $mod+Shift+5 move container to workspace 5
+    $mod+Shift+6 move container to workspace 6
+    $mod+Shift+7 move container to workspace 7
+    $mod+Shift+8 move container to workspace 8
+    $mod+Shift+9 move container to workspace 9
+    $mod+Shift+0 move container to workspace 10
+
+    $mod+Shift+w exec swaymsg -t get_outputs \
+      | jq '.[] \
+      | .name' \
+      | sed -n "1p;/`swaymsg -t get_outputs \
+      | jq '.[] \
+      | select(.focused==true) \
+      | .name'`/{n;p;}" \
+      | tail -n1 \
+      | xargs swaymsg move workspace to
+
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+
+    ## Layout stuff:
+
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    $mod+b splith
+    $mod+v splitv
+
+    # Switch the current container between different layout styles
+    $mod+s layout stacking
+    $mod+w layout tabbed
+    $mod+e layout toggle split
+
+    # Keyboard layout
+    --locked {
+        $mod+z input type:keyboard xkb_layout us
+        $mod+x input type:keyboard xkb_layout ru
+        $mod+c input type:keyboard xkb_layout ua
+    }
+   
+    # Make the current focus fullscreen
+    $mod+f fullscreen
+
+    # Dismiss notification
+    $mod+m exec makoctl dismiss
+
+    # Toggle the current focus between tiling and floating mode
+    $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    $mod+space focus mode_toggle
+
+    # move focus to the parent container
+    $mod+a focus parent
+
+    ## Scratchpad:
+
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    $mod+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    $mod+minus scratchpad show
+
+    $mod+r mode "resize"
+}
+
+mode "resize" {
+    bindsym --to-code {
+        # left will shrink the containers width
+        # right will grow the containers width
+        # up will shrink the containers height
+        # down will grow the containers height
+        $left resize shrink width 10px
+        $down resize grow height 10px
+        $up resize shrink height 10px
+        $right resize grow width 10px
+
+        # ditto, with arrow keys
+        Left resize shrink width 10px
+        Down resize grow height 10px
+        Up resize shrink height 10px
+        Right resize grow width 10px
+
+        # return to default mode
+        Return mode "default"
+        Escape mode "default"
+    }
+}
+
+
+## Status Bar:
+
+# Read `man 5 sway-bar` for more information about this section.
+bar {
+    font pango:DejaVu Sans Mono, FontAwesome 12
+    position top
+
+    # When the status_command prints a new line to stdout, swaybar updates.
+    # The default just shows the current date and time.
+    status_command i3status-rs $HOME/.config/i3statusbar.toml
+    # swaybar_command waybar
+
+    colors {
+        separator #666666
+        background #222222
+        statusline #dddddd
+        focused_workspace #0088CC #0088CC #ffffff
+        active_workspace #333333 #333333 #ffffff
+        inactive_workspace #333333 #333333 #888888
+        urgent_workspace #2f343a #900000 #ffffff
+    }
+}

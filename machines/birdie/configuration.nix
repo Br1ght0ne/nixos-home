@@ -5,6 +5,8 @@
     <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ../../configuration.nix
     ../../profiles/efi.nix
+    ../../profiles/mysql.nix
+    ../../profiles/sway
   ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "rtsx_pci_sdmmc" ];
@@ -34,10 +36,9 @@
 
   hardware.bluetooth.enable = true;
 
-  home-manager.users.brightone = { pkgs, ... }: {
-    services.polybar.config."bar/main" = {
-      monitor = "eDP-1";
-      height = "3%";
+  home-manager.users.brightone = {
+    services = {
+      sxhkd.keybindings = { "super + Delete" = "betterlockscreen -l dimblur"; };
     };
   };
 }

@@ -9,7 +9,7 @@
       };
       font = {
         normal.family = "FuraCode Nerd Font";
-        size = 8.0;
+        size = 10.0;
       };
       colors = {
         primary = {
