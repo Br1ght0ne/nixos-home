@@ -3,26 +3,43 @@
 {
   programs.zsh = {
     enable = true;
-    # still works, but faster
-    enableCompletion = false;
+    enableCompletion = true;
     autocd = true;
-    initExtraBeforeCompInit = ''
-      fpath+="$HOME/.zsh/completions"
-    '';
-    initExtra = ''
-      export ZDOTDIR=$HOME/.zsh
-      . $ZDOTDIR/env.zsh
-      [[ -f $ZDOTDIR/plugins.zsh ]] || antibody bundle <$ZDOTDIR/plugins.txt >$ZDOTDIR/plugins.zsh
-      . $ZDOTDIR/plugins.zsh
-      . $ZDOTDIR/plugins-config.zsh
-      . $ZDOTDIR/aliases.zsh
-      . $ZDOTDIR/bindings.zsh
-      . $ZDOTDIR/theme.zsh
-    '';
-  };
-
-  home.file.".zsh" = {
-    source = ./.zsh;
-    recursive = true;
+    plugins = with pkgs;
+      let
+        prezto = fetchFromGitHub {
+          owner = "sorin-ionescu";
+          repo = "prezto";
+          rev = "2d6205e71404704eecc4f402e5b09d7cbd19bab7";
+          sha256 = "1ks4vzgh033aw7xr10q1cy6ikmhwz2qbqiqb7056sb0y8kmh86wh";
+          fetchSubmodules = true;
+        };
+        preztoModule = module: {
+          name = "prezto-${module}";
+          src = "${prezto}/modules/${module}";
+          file = "init.zsh";
+        };
+      in [
+        {
+          name = "prezto";
+          src = prezto;
+          file = "init.zsh";
+        }
+        rec {
+          name = "fast-syntax-highlighting";
+          src = fetchFromGitHub {
+            owner = "zdharma";
+            repo = name;
+            rev = "d8e5bbe3dade87216d1a0dddb59a1c148b206e24";
+            sha256 = "1ks4vzgh033aw7xr10q1cy6ikmhwz2qbqiqb7056sb0y8kmh86wh";
+          };
+        }
+      ] ++ map preztoModule [
+        "utility"
+        "completion"
+        "history-substring-search"
+        "docker"
+        "git"
+      ];
   };
 }
