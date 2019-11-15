@@ -1,4 +1,8 @@
+{ pkgs, ... }:
+
 {
+  home.packages = with pkgs.gitAndTools; [ bfg-repo-cleaner git-standup hub ];
+
   home.file.gitignore = {
     target = ".gitignore";
     text = ''
