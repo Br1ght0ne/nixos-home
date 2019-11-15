@@ -4,9 +4,9 @@
   imports = [
     <nixpkgs/nixos/modules/installer/scan/not-detected.nix>
     ../../configuration.nix
-    ../../profiles/efi.nix
-    ../../profiles/mysql.nix
-    ../../profiles/sway
+    ../../modules/hardware/boot/efi.nix
+    ../../modules/mysql.nix
+    ../../modules/sway
   ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "rtsx_pci_sdmmc" ];
