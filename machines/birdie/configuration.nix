@@ -6,6 +6,7 @@
     ../../configuration.nix
     ../../modules/hardware/boot/efi.nix
     ../../modules/mysql.nix
+    ../../modules/keybase.nix
     ../../modules/sway
   ];
 
