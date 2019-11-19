@@ -524,7 +524,7 @@
                 ("n" "Note" entry (file+headline "Notes.org" "Notes") "* %?\n%c"))
               (--map `(,(s-left 2 it) ,it entry (file+headline "gtd/gtd.org" ,it) "* TODO %?\n%c")
                      '("home" "uni" "work" "reading" "watching" "listening" "doing")))
-      org-refile-targets '((nil :maxlevel . 2)
+      org-refile-targets `((,(concat org-directory "content.org") :maxlevel . 3)
                            (org-agenda-files :maxlevel . 2))
       org-link-abbrev-alist '(("r" . "https://reddit.com/r/")
                               ("gh" . "https://github.com/")
