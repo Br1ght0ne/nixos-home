@@ -77,6 +77,9 @@ input type:touchpad {
     tap_button_map lrm
 }
 
+# Make trackpoint bearable
+input 2:10:TPPS/2_Elan_TrackPoint pointer_accel -0.1
+
 # Default seat configuration
 seat seat0 {
     hide_cursor 3000
