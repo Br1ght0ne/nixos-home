@@ -1,20 +1,23 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
+handlers = {
+  image: 'curl-to-imv',
+  coub: 'coub-dl',
+  video: 'mpv --loop',
+  magnet: 'transmission-gtk',
+  flatpak: 'alacritty -e flatpak install --user',
+  browser: ENV['BROWSER'] || 'firefox'
+}
 
 ARGV.each do |url|
   case url
-  when /imgur|i\.redd\.it|^https?:.*\.(jpg|png|gif)$/
-    'sxiv-url'
-  when /\.(jpg|png|gif)$/
-    'sxiv -a'
-  when /coub\.com/
-    'coub-dl'
-  when /gfycat|v\.redd\.it|youtu\.?be|\.(webm|mp4)$/
-    'mpv --loop'
-  when /^magnet:/
-    'transmission-gtk'
-  when /flatpakref$/
-    'alacritty -e flatpak install --user'
-  else
-    (File.exist?('/usr/bin/open') && 'open') || ENV['BROWSER'] || 'qutebrowser-client'
+  when /imgur|i\.redd\.it|^https?:.*\.(jpg|png|gif)$/ then handlers[:image]
+  when /\.(jpg|png|gif)$/ then handlers[:image]
+  when /coub\.com/ then handlers[:coub]
+  when /gfycat|v\.redd\.it|youtu\.?be|\.(webm|mp4)$/ then handlers[:video]
+  when /^magnet:/ then handlers[:magnet]
+  when /flatpakref$/ then handlers[:flatpak]
+  else handlers[:browser]
   end.then { |action| spawn("#{action} '#{url}'") }
 end
