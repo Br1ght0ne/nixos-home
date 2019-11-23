@@ -12,6 +12,7 @@
       steam-run = (steamWithLibs.override { nativeOnly = true; }).run;
     in [
       # desktop
+      imv
       libnotify
       neofetch
 
@@ -19,6 +20,7 @@
       antibody
 
       # development
+      crystal
       docker-compose
       editorconfig-core-c
       elixir
@@ -42,6 +44,7 @@
       nix-review
 
       # documents
+      gimp-with-plugins
       libreoffice-fresh
 
       # other ART (Awesome Rust Tools)
@@ -53,6 +56,7 @@
       just
       lsd
       pastel
+      ruplacer
       sd
       tealdeer
       tokei
