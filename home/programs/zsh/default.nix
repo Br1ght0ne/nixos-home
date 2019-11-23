@@ -10,6 +10,15 @@
     initExtra = ''
       source $HOME/.asdf/asdf.sh
     '';
+    envExtra = ''
+      export PATH="$HOME/.local/bin:$PATH"
+      export BROWSER=firefox
+      export EDITOR=emacs
+    '';
+    loginExtra = ''
+      ssh-add -D
+      ssh-add $HOME/.ssh/{blackbird,id_rsa}
+    '';
     plugins = with pkgs; [
       {
         name = "prezto";
