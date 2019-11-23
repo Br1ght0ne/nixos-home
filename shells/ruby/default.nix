@@ -3,6 +3,6 @@
 with pkgs;
 
 mkShell {
-  buildInputs = [ libmysqlclient libxml2 sqlite zlib ]
+  buildInputs = [ libmysqlclient libxml2 ruby sqlite zlib ]
     ++ (with rubyPackages; [ rspec-core ]);
 }
