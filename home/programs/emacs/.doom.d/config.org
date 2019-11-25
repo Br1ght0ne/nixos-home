@@ -908,12 +908,11 @@ Discord Rich presence
   (elcord-mode 1))
 #+END_SRC
 ** Rust
-*** ABRT Disable ~whitespace-mode~
-Should be fixed in [[orgit-rev:~/.emacs.d/::b34a542ca0691345a15bac876cc96fb590200303][0200303]].
-
-#+BEGIN_SRC emacs-lisp :tangle no
-(add-hook 'rustic-mode-local-vars-hook
-          (λ! (set (make-local-variable 'whitespace-mode) nil)))
+*** Use rust-analyzer
+#+BEGIN_SRC emacs-lisp
+(after! rustic
+  (when (executable-find "ra_lsp_server")
+    (setq rustic-lsp-server 'rust-analyzer)))
 #+END_SRC
 ** TRAMP
 *** Enable =yadm= method for Magit support
