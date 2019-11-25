@@ -81,8 +81,8 @@
       cataclysm-dda
 
       # monitoring
-      python37Packages.glances
       inxi
+      python3Packages.glances
       speedtest-cli
 
       # passwords & security
@@ -100,7 +100,7 @@
       syncthing-gtk
 
       # entertainment
-      python37Packages.mps-youtube
+      python3Packages.mps-youtube
       youtube-dl
     ];
 }
