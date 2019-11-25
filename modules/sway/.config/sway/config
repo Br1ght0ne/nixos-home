@@ -44,9 +44,6 @@ output "Dell Inc. DELL P2419HC 6LZCJQ2" {
     pos 1920 0
 }
 
-bindswitch lid:on output eDP-1 disable
-bindswitch lid:off output eDP-1 enable
-
 ## Autostart
 
 exec {
