@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  home.packages = with pkgs; [ zsh-completions ];
+
   home.file.".zpreztorc".source = ./zpreztorc;
 
   programs.zsh = {
