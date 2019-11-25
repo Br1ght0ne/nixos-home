@@ -186,11 +186,12 @@ bindsym --to-code {
     $mod+e layout toggle split
 
     # Keyboard layout
-    --locked {
-        $mod+z input type:keyboard xkb_layout us
-        $mod+x input type:keyboard xkb_layout ru
-        $mod+c input type:keyboard xkb_layout ua
-    }
+    # FIXME: breaks everything
+    # --locked {
+    #     $mod+z input type:keyboard xkb_layout us
+    #     $mod+x input type:keyboard xkb_layout ru
+    #     $mod+c input type:keyboard xkb_layout ua
+    # }
    
     # Make the current focus fullscreen
     $mod+f fullscreen
