@@ -68,22 +68,6 @@
     mtr.enable = true;
     light.enable = true;
     ssh.startAgent = true;
-    sway = {
-      enable = true;
-      extraPackages = with pkgs; [
-        swaylock
-        swayidle
-        xwayland
-        i3status
-        i3status-rust
-      ];
-      extraSessionCommands = ''
-        export SDL_VIDEODRIVER=wayland
-        export QT_QPA_PLATFORM=wayland
-        export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-        export _JAVA_AWT_WM_NONREPARENTING=1
-      '';
-    };
     thefuck.enable = true;
     zsh.enable = true;
   };
