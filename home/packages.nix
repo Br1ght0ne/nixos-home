@@ -11,13 +11,6 @@
         (steam.override { extraPkgs = pkgs: [ libjpeg openssl_1_0_2 ]; });
       steam-run = (steamWithLibs.override { nativeOnly = true; }).run;
     in [
-      # desktop
-      libnotify
-      neofetch
-
-      # shells
-      antibody
-
       # development
       crystal
       editorconfig-core-c
@@ -81,6 +74,7 @@
 
       # monitoring
       inxi
+      neofetch
       python3Packages.glances
       speedtest-cli
 
