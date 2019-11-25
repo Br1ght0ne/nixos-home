@@ -12,7 +12,6 @@
       steam-run = (steamWithLibs.override { nativeOnly = true; }).run;
     in [
       # desktop
-      imv
       libnotify
       neofetch
 

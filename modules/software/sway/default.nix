@@ -29,6 +29,7 @@ in {
       gebaar-libinput # libinput gestures utility
       glpaper # GL shaders as wallpaper
       grim # screen image capture
+      imv # image viewer
       kanshi # dynamic display configuration helper
       mako # notification daemon
       oguri # animated background utility
