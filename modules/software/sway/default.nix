@@ -17,6 +17,8 @@ in {
     '';
     extraPackages = with pkgs; [
       xwayland
+      qt5.qtwayland
+
       swaybg # required by sway for controlling desktop wallpaper
       swayidle # used for controlling idle timeouts and triggers (screen locking, etc)
       swaylock # used for locking Wayland sessions
@@ -41,10 +43,6 @@ in {
       xdg-desktop-portal-wlr # xdg-desktop-portal backend for wlroots
     ];
   };
-
-  services.upower.enable = true;
-
-  environment.systemPackages = with pkgs; [ cachix qt5.qtwayland ];
 
   home-manager.users.brightone = {
     xdg.configFile."sway/config".source = ./.config/sway/config;
