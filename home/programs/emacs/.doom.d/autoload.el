@@ -96,10 +96,6 @@
     (+private/open-link-with it)))
 
 ;;;###autoload
-(defun +private/open-gtd-file (name)
-  (find-file (concat org-gtd-directory name ".org")))
-
-;;;###autoload
 (defun +private/treemacs-back-and-forth ()
   (interactive)
   (if (treemacs-is-treemacs-window-selected?)
