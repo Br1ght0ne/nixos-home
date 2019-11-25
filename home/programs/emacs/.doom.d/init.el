@@ -140,7 +140,6 @@
        terraform          ; before Mars, start with your ~server~ ROOM AND THE MESS INSIDE
        ;; tmux            ; an API for interacting with tmux
        ;; upload          ; map local to remote projects via ssh/ftp
-       wakatime           ; maintaining your illusions of being productive
 
        :ui                ; you can't stare at that console all day, Ronny!
        ;; deft            ; for those who didn't try org-mode
