@@ -41,8 +41,10 @@
 
       # nix stuff
       nixfmt
+      nix-index
       nix-prefetch-github
       nix-review
+      patchelf
 
       # documents
       gimp-with-plugins

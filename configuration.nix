@@ -19,18 +19,13 @@
       home-manager
       lsb-release
       ncdu
-      nix-index
-      patchelf
       pavucontrol
       pciutils
       pmutils
-      qt5.qtwayland
+      psmisc
       unzip
       vim
       wget
-      xorg.xbacklight
-      xorg.xmodmap
-      xorg.xrdb
     ];
   };
 
