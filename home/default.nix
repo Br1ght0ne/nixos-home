@@ -11,7 +11,7 @@
     users.brightone = {
       isNormalUser = true;
       extraGroups =
-        [ "audio" "camera" "docker" "input" "networkmanager" "video" "wheel" ];
+        [ "audio" "camera" "input" "networkmanager" "video" "wheel" ];
       hashedPassword =
         "$6$Hbwcp8inqhM0K$cuw2YW25pwTVSJcxOwRLuDszM1InXXeMSGXNLSXMAd7DWQayTUXwinXEOQZ1vydbafDqFHle0eVZPqAuMzRBw0";
       shell = pkgs.zsh;

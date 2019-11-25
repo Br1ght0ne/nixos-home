@@ -88,9 +88,6 @@
 
   time.timeZone = "Europe/Kiev";
 
-  # Enable Docker support.
-  virtualisation.docker.enable = true;
-
   # Enable the GTK portal (for Flatpak).
   xdg.portal = {
     enable = true;

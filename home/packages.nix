@@ -21,13 +21,11 @@
 
       # development
       crystal
-      docker-compose
       editorconfig-core-c
       elixir
       exercism
       gdb
       insomnia
-      lazydocker
       lua
       nasm
       nodejs
