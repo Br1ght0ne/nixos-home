@@ -9,6 +9,7 @@
     ./git.nix
     ./home-manager.nix
     ./jetbrains.nix
+    ./keybase.nix
     ./mpv.nix
     ./ranger
     ./ripgrep.nix

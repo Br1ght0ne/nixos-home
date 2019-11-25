@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   imports = [ ./home ./overrides.nix ];
@@ -91,13 +91,13 @@
   # Users in 'wheel' can sudo without password.
   security.sudo.wheelNeedsPassword = false;
 
-  services = {
+  services = with pkgs; {
     bitlbee = {
       enable = true;
-      libpurple_plugins = with pkgs; [ telegram-purple ];
-      plugins = with pkgs; [ bitlbee-discord ];
+      libpurple_plugins = [ telegram-purple ];
+      plugins = [ bitlbee-discord ];
     };
-    dbus.packages = [ pkgs.gnome3.dconf ];
+    dbus.packages = [ gnome3.dconf ];
     geoclue2.enable = true;
     flatpak.enable = true;
   };
