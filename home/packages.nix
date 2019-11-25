@@ -36,6 +36,7 @@
       shellcheck
       shfmt
       stack
+      virtualbox
       wakatime
 
       # nix stuff
@@ -73,7 +74,6 @@
       # gaming software
       steamWithLibs
       steam-run
-      virtualbox
       wineFull
       winetricks
 
@@ -82,6 +82,7 @@
 
       # monitoring
       python37Packages.glances
+      inxi
       speedtest-cli
 
       # passwords & security
