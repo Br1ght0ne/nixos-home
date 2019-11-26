@@ -12,6 +12,7 @@
     ./jetbrains.nix
     ./keybase.nix
     ./mpv.nix
+    ./next.nix
     ./ranger
     ./ripgrep.nix
     ./rofi

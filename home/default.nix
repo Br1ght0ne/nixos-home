@@ -19,8 +19,10 @@
   };
 
   home-manager.users.brightone = { pkgs, ... }: {
+    imports = [ ./email.nix ./files ./packages.nix ./programs ./themes.nix ];
+
     nixpkgs.config.allowUnfree = true;
 
-    imports = [ ./email.nix ./files ./packages.nix ./programs ./themes.nix ];
+    programs = { next.enable = true; };
   };
 }
