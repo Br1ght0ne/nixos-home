@@ -1,5 +1,7 @@
 { lib, ... }:
 
+with lib;
+
 {
   imports = [ ../../profiles/boot/efi.nix ../../profiles/form/laptop.nix ];
 
@@ -21,5 +23,5 @@
 
   swapDevices = [{ device = "/dev/disk/by-label/swap"; }];
 
-  nix.maxJobs = lib.mkDefault 8;
+  nix.maxJobs = mkDefault 8;
 }
