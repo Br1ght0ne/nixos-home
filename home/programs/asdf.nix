@@ -13,6 +13,7 @@ let
   };
 in {
   options.programs.asdf = {
+    enable = mkEnableOption "asdf version manager";
     toolVersions = mkOption {
       default = { };
       type = with types; attrsOf str;
@@ -23,7 +24,7 @@ in {
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     home.file = {
       ".tool-versions" = {
         onChange = let

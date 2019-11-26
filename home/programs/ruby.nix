@@ -9,6 +9,7 @@ let
   rubyVersion = ruby.version.majMinTiny;
 in {
   options.programs.ruby = {
+    enable = mkEnableOption "Ruby language";
     extraRubyPackages = mkOption {
       default = [ ];
       type = with types; listOf package;
@@ -24,7 +25,7 @@ in {
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     home.packages = with pkgs;
       (optionals (!cfg.useAsdf) [ ruby ])
       ++ (optionals cfg.buildLibs [ libmysqlclient libxml2 ruby sqlite zlib ])

@@ -23,6 +23,10 @@
 
     nixpkgs.config.allowUnfree = true;
 
-    programs = { next.enable = true; };
+    programs = {
+      asdf.enable = true;
+      next.enable = true;
+      ruby.enable = true;
+    };
   };
 }
