@@ -43,6 +43,7 @@
   ];
 
   hardware = {
+    enableRedistributableFirmware = true;
     pulseaudio = {
       enable = true;
       support32Bit = true;
