@@ -6,9 +6,12 @@
     }))
   ];
 
-  programs.emacs = {
-    enable = true;
-    package = pkgs.emacsGit;
+  programs = {
+    emacs = {
+      enable = true;
+      package = pkgs.emacsGit;
+    };
+    zsh.sessionVariables.EDITOR = "emacs";
   };
 
   home.file.".doom.d" = {
