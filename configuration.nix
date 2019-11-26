@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  imports = [ ./home ./overrides.nix ];
+  imports = [ ./modules ./home ./overrides.nix ];
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 

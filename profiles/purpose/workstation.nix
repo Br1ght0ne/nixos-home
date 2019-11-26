@@ -1,9 +1,10 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [
-    ../../modules/software/docker.nix
-    ../../modules/software/mysql.nix
-    ../../modules/software/sway
-  ];
+  programs.sway.enable = true;
+
+  services = {
+    docker.enable = true;
+    mysql.enable = true;
+  };
 }

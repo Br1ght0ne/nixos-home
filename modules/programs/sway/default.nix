@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 let
   url = "https://github.com/colemickens/nixpkgs-wayland/archive/master.tar.gz";
@@ -9,7 +9,6 @@ in {
   nixpkgs.overlays = [ waylandOverlay ];
 
   programs.sway = {
-    enable = true;
     extraSessionCommands = ''
       export SDL_VIDEODRIVER=wayland
       export _JAVA_AWT_WM_NONREPARENTING=1
