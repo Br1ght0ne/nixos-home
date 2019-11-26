@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   imports = [
     ./alacritty.nix
+    ./asdf.nix
     ./aspell.nix
     ./beets.nix
     ./cmus

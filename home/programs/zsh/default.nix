@@ -9,9 +9,6 @@
     enable = true;
     enableCompletion = true;
     autocd = true;
-    initExtra = ''
-      source $HOME/.asdf/asdf.sh
-    '';
     loginExtra = ''
       ssh-add -D
       ssh-add $HOME/.ssh/{blackbird,id_rsa}
