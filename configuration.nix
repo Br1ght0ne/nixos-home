@@ -6,6 +6,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   environment = {
+    homeBinInPath = true;
     pathsToLink = [ "share/zsh" ];
     systemPackages = with pkgs; [
       acl
