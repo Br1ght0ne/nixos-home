@@ -1,0 +1,213 @@
+#+TITLE: configuration.nix
+#+PROPERTY: header-args:nix :tangle yes
+
+* Prologue
+We use only Nixpkgs here.
+#+BEGIN_SRC nix
+{ pkgs, ... }:
+
+{
+#+END_SRC
+* Imports
+#+BEGIN_SRC nix
+imports = [
+  # Enable system-wide modules.
+  ./modules
+  # Home-manager and related stuff.
+  <home-manager/nixos>
+  ./home
+  # The host-specific configuration.
+  ./host-configuration.nix
+  # Any overrides you might want (temporarily).
+  ./overrides.nix
+];
+#+END_SRC
+* Boot
+** Kernel
+I prefer to use the latest and greatest Linux kernel on most of my machines.
+#+BEGIN_SRC nix
+boot.kernelPackages = pkgs.linuxPackages_latest;
+#+END_SRC
+* Environment
+** Link =/share/zsh=
+So the completions provided by ~environment.systemPackages~ are available.
+#+BEGIN_SRC nix
+environment.pathsToLink = [ "share/zsh" ];
+#+END_SRC
+** TODO System packages
+#+BEGIN_SRC nix
+environment.systemPackages = with pkgs; [
+  acl
+  bash
+  binutils
+  file
+  gawk
+  gcc9
+  git
+  gnumake
+  lsb-release
+  ncdu
+  pavucontrol
+  pciutils
+  pmutils
+  psmisc
+  unzip
+  vim
+  wget
+];
+#+END_SRC
+* TODO Fonts
+#+BEGIN_SRC nix
+fonts.fonts = with pkgs; [
+  dejavu_fonts
+  fira-code
+  fira-code-symbols
+  font-awesome_5
+  iosevka
+  material-icons
+  powerline-fonts
+];
+#+END_SRC
+* Hardware
+** Enable redistributable firmware
+Allows most of the hardware to work out-of-the-box, without unfree stuff.
+#+BEGIN_SRC nix
+hardware.enableRedistributableFirmware = true;
+#+END_SRC
+** Audio
+*** Enable PulseAudio
+#+BEGIN_SRC nix
+hardware.pulseaudio.enable = true;
+sound.enable = true;
+#+END_SRC
+**** 32-bit support
+#+BEGIN_SRC nix
+hardware.pulseaudio.support32Bit = true;
+#+END_SRC
+*** Media keys
+Very convenient. By the way, all the indicators (mute, etc.) work on NixOS :)
+#+BEGIN_SRC nix
+sound.mediaKeys.enable = true;
+#+END_SRC
+** Video
+*** OpenGL
+**** Support 32-bit libraries
+#+BEGIN_SRC nix
+hardware.opengl.driSupport32Bit = true;
+#+END_SRC
+* Networking
+** NetworkManager
+/The way/ to manage network stuff when using systemd.
+#+BEGIN_SRC nix
+networking.networkmanager.enable = true;
+#+END_SRC
+** TODO Firewall
+#+BEGIN_SRC nix
+networking.firewall.enable = false;
+#+END_SRC
+* Programs
+** TODO DConf
+Was needed to make dbus work at first install.
+#+BEGIN_SRC nix
+programs.dconf.enable = true;
+#+END_SRC
+** TODO GPG agent
+Holds my keys for... Something?
+#+BEGIN_SRC nix
+programs.gnupg.agent.enable = true;
+#+END_SRC
+** iotop
+Great way to see what hangs your disk I/O.
+#+BEGIN_SRC nix
+programs.iotop.enable = true;
+#+END_SRC
+** mosh
+Allows me to keep stronger connections to remote servers.
+#+BEGIN_SRC nix
+programs.mosh.enable = true;
+#+END_SRC
+** mtr
+=traceroute=, but better.
+#+BEGIN_SRC nix
+programs.mtr.enable = true;
+#+END_SRC
+** SSH
+*** ssh-agent
+zsh will add my keys on login with =ssh-add=.
+#+BEGIN_SRC nix
+programs.ssh.startAgent = true;
+#+END_SRC
+** thefuck
+#+BEGIN_EXAMPLE
+$ git vommit -m 'Add thefuck - an awesome tool to fix your typos'
+git: 'vommit' is not a git command. See 'git --help'.
+
+The most similar command is
+    commit
+$ fuck
+#+END_EXAMPLE
+
+#+BEGIN_SRC nix
+programs.thefuck.enable = true;
+#+END_SRC
+** zsh
+If true, conflicts with =home-manager='s =zsh= module, making startup
+dramatically slower.
+#+BEGIN_SRC nix
+programs.zsh.enable = false;
+#+END_SRC
+* Security
+** Users in 'wheel' can sudo without password
+#+BEGIN_SRC nix
+security.sudo.wheelNeedsPassword = false;
+#+END_SRC
+* Services
+** Bitlbee
+An IRC gateway to bridge more services together.
+#+BEGIN_SRC nix
+services.bitlbee = {
+  enable = true;
+  libpurple_plugins = with pkgs; [ telegram-purple ];
+  plugins = with pkgs; [ bitlbee-discord ];
+};
+#+END_SRC
+** TODO Dbus
+*** Add dconf to packages
+#+BEGIN_SRC nix
+services.dbus.packages = [ pkgs.gnome3.dconf ];
+#+END_SRC
+** Flatpak
+#+BEGIN_SRC nix
+services.flatpak.enable = true;
+#+END_SRC
+*** Enable the GTK portal
+#+BEGIN_SRC nix
+xdg.portal = {
+  enable = true;
+  extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+};
+#+END_SRC
+** Geoclue2
+For Redshift to find my location.
+#+BEGIN_SRC nix
+services.geoclue2.enable = true;
+#+END_SRC
+* Regional configuration, etc.
+** Time zone
+#+BEGIN_SRC nix
+time.timeZone = "Europe/Kiev";
+#+END_SRC
+* System configuration
+*Warning*: pretty low-level stuff, here be dragons.
+** NixOS release
+#+BEGIN_SRC nix
+# This value determines the NixOS release with which your system is to be
+# compatible, in order to avoid breaking some software such as database
+# servers. You should change this only after NixOS release notes say you
+# should.
+system.stateVersion = "20.03"; # Did you read the comment?
+#+END_SRC
+* Epilogue
+#+BEGIN_SRC nix
+}
+#+END_SRC

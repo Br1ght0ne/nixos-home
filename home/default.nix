@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ <home-manager/nixos> ];
   home-manager.useUserPackages = false;
   environment.homeBinInPath = true;
 
