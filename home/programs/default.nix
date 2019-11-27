@@ -30,7 +30,13 @@
     bash.enable = true;
     bat.enable = true;
     broot.enable = true;
-    chromium.enable = true;
+    chromium = {
+      enable = true;
+      extensions = [
+        "gcbommkclmclpchllfjekcdonpmejbdp" # HTTPS Everywhere
+        "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
+      ];
+    };
     command-not-found.enable = true;
     direnv.enable = true;
     go.enable = true;
