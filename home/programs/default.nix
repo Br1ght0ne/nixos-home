@@ -30,6 +30,7 @@
     bash.enable = true;
     bat.enable = true;
     broot.enable = true;
+    chromium.enable = true;
     command-not-found.enable = true;
     direnv.enable = true;
     go.enable = true;
