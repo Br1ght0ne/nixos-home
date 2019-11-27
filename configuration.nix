@@ -74,7 +74,9 @@
     light.enable = true;
     ssh.startAgent = true;
     thefuck.enable = true;
-    zsh.enable = true;
+    # HACK: if true, conflicts with home-manager's zsh module,
+    # making startup dramatically slower.
+    zsh.enable = false;
   };
 
   # Users in 'wheel' can sudo without password.
