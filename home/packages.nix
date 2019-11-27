@@ -18,6 +18,7 @@
       exercism
       gdb
       insomnia
+      ix
       lua
       nasm
       nodejs
