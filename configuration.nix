@@ -7,7 +7,7 @@
     # Home-manager and related stuff.
     ./home
     # The host-specific configuration.
-    ./machine.nix
+    ./machine-configuration.nix
     # Any overrides you might want (temporarily).
     ./overrides.nix
   ];
@@ -25,7 +25,6 @@
       gcc9
       git
       gnumake
-      home-manager
       lsb-release
       ncdu
       pavucontrol

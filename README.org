@@ -1,39 +1,35 @@
+#+PROPERTY: header-args:sh :tangle install.sh
+
 * =nixos-home=
 #+BEGIN_QUOTE
 dotfiles for Nix + home-manager (mostly for NixOS)
 #+END_QUOTE
 
-** What's included
-The configuration is modular: see ~imports~ in =home.nix= for disabling parts of it.
-
-- =config.nix=: =nix-env= configuration: allowing non-free packages, etc.
-- =email.nix=: email applications and accounts.
-  I mostly rely on =mbsync= to sync my email, and keep my passwords in =gopass=.
-- =packages.nix=: a list of packages that don't require additional configuration.
-- =programs=: stuff that you run by hand.
-- =services=: stuff that runs in the background and you don't think about it.
-- =themes.nix=: GTK+ and Qt theme configuration.
-
-** Installation
+** TODO What's included
+** STRT Installation
 *** NixOS
-- Add =git= and =home-manager= to your ~environment.systemPackages~:
-#+BEGIN_SRC nix
-# /etc/nixos/configuration.nix
-{
-  environment.systemPackages = with pkgs; [ git home-manager ];
-}
-#+END_SRC
+**** Switch to root
 #+BEGIN_SRC sh
-sudo nixos-rebuild switch
+sudo -i
 #+END_SRC
-- Clone this repository:
+**** Add =home-manager= channel
 #+BEGIN_SRC sh
-git clone https://github.com/filalex77/nixos-home.git ~/.config/nixpkgs
+nix-channel --add https://github.com/rycee/home-manager/archive/master.tar.gz home-manager
+nix-channel --update
 #+END_SRC
-- Run
+**** Clone this repository
 #+BEGIN_SRC sh
-home-manager switch
+nix-shell -p git --run git clone https://github.com/filalex77/nixos-home.git /etc/nixos
 #+END_SRC
-- Hope and pray. (this was not tested)
-
-#  LocalWords:  dotfiles GTK nixos NixOS
+**** Link the host you're on
+#+BEGIN_SRC sh
+ln -s "/etc/nixos/machines/${HOST}/configuration.nix" /etc/nixos/machine-configuration.nix
+#+END_SRC
+**** Switch to the new configuration
+#+BEGIN_SRC sh
+nixos-rebuild switch
+#+END_SRC
+**** Exit root user
+#+BEGIN_SRC sh
+exit
+#+END_SRC
