@@ -31,7 +31,7 @@
           owner = "zdharma";
           repo = name;
           rev = "d8e5bbe3dade87216d1a0dddb59a1c148b206e24";
-          sha256 = "1ks4vzgh033aw7xr10q1cy6ikmhwz2qbqiqb7056sb0y8kmh86wh";
+          sha256 = "1na4clk4lcv849gidfn72vp1ycww3pxl41fgkq453i55g9mx2say";
         };
       }
     ];
