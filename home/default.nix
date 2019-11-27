@@ -3,6 +3,7 @@
 {
   imports = [ <home-manager/nixos> ];
   home-manager.useUserPackages = false;
+  environment.homeBinInPath = true;
 
   users = {
     # Disable ad-hoc user management.
