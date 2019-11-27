@@ -24,9 +24,12 @@
     nixpkgs.config.allowUnfree = true;
 
     programs = {
-      asdf.enable = true;
+      asdf.enable = false;
       next.enable = true;
-      ruby.enable = true;
+      ruby = {
+        enable = true;
+        useAsdf = false;
+      };
     };
   };
 }

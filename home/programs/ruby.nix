@@ -27,9 +27,9 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = with pkgs;
-      (optionals (!cfg.useAsdf) [ ruby ])
-      ++ (optionals cfg.buildLibs [ libmysqlclient libxml2 ruby sqlite zlib ])
-      ++ cfg.extraRubyPackages;
+      let buildLibs = [ libmysqlclient libxml2 openssl sqlite zlib ];
+      in (optionals cfg.buildLibs buildLibs)
+      ++ (optionals (!cfg.useAsdf) [ ruby ] ++ cfg.extraRubyPackages);
     programs.asdf.toolVersions.ruby = mkIf cfg.useAsdf rubyVersion;
   };
 }

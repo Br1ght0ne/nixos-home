@@ -29,7 +29,7 @@ in {
       ".tool-versions" = {
         onChange = let
           asdf = "${src}/bin/asdf";
-          langToPluginAdd = lang: _version: "${asdf} plugin-add ${lang}";
+          langToPluginAdd = lang: _version: "${asdf} plugin-add ${lang} || true";
           pluginAdds = mapAttrsToList langToPluginAdd cfg.toolVersions;
         in concatStringsSep "\n"
         (pluginAdds ++ (optional (cfg.toolVersions != { }) "${asdf} install"));
