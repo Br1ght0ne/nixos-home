@@ -5,7 +5,7 @@ nix-channel --update
 
 nix-shell -p git --run git clone https://github.com/filalex77/nixos-home.git /etc/nixos
 
-ln -s "/etc/nixos/machines/${HOST}/configuration.nix" /etc/nixos/machine-configuration.nix
+ln -s "/etc/nixos/hosts/${HOST}/configuration.nix" /etc/nixos/host-configuration.nix
 
 nixos-rebuild switch
 

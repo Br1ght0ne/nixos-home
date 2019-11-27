@@ -23,7 +23,7 @@ nix-shell -p git --run git clone https://github.com/filalex77/nixos-home.git /et
 #+END_SRC
 **** Link the host you're on
 #+BEGIN_SRC sh
-ln -s "/etc/nixos/machines/${HOST}/configuration.nix" /etc/nixos/machine-configuration.nix
+ln -s "/etc/nixos/hosts/${HOST}/configuration.nix" /etc/nixos/host-configuration.nix
 #+END_SRC
 **** Switch to the new configuration
 #+BEGIN_SRC sh

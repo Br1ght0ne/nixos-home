@@ -7,7 +7,7 @@
     # Home-manager and related stuff.
     ./home
     # The host-specific configuration.
-    ./machine-configuration.nix
+    ./host-configuration.nix
     # Any overrides you might want (temporarily).
     ./overrides.nix
   ];

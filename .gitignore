@@ -1,2 +1,2 @@
-/machine-configuration.nix
+/host-configuration.nix
 /overrides.nix
