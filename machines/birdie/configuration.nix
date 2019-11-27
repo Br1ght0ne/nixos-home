@@ -1,11 +1,6 @@
-{ config, lib, pkgs, ... }:
-
 {
-  imports = [
-    ../../configuration.nix
-    ./hardware-configuration.nix
-    ../../profiles/purpose/workstation.nix
-  ];
+  imports =
+    [ ./hardware-configuration.nix ../../profiles/purpose/workstation.nix ];
 
   networking.hostName = "birdie";
 

@@ -1,12 +1,20 @@
 { pkgs, ... }:
 
 {
-  imports = [ ./modules ./home ./overrides.nix ];
+  imports = [
+    # Enable system-wide modules.
+    ./modules
+    # Home-manager and related stuff.
+    ./home
+    # The host-specific configuration.
+    ./machine.nix
+    # Any overrides you might want (temporarily).
+    ./overrides.nix
+  ];
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   environment = {
-    homeBinInPath = true;
     pathsToLink = [ "share/zsh" ];
     systemPackages = with pkgs; [
       acl
