@@ -9,27 +9,28 @@ let
   rubyVersion = ruby.version.majMinTiny;
 in {
   options.programs.ruby = {
-    enable = mkEnableOption "Ruby language";
-    extraRubyPackages = mkOption {
-      default = [ ];
+    enable = mkEnableOption "Ruby language support";
+    extraPackages = mkOption {
+      default = with rubyPackages; [ rubocop rspec-core ];
       type = with types; listOf package;
-      example = with rubyPackages; [ rspec-core ];
     };
-    buildLibs = mkOption {
-      default = true;
-      type = types.bool;
+    enableBuildLibs = mkEnableOption "build libraries for Ruby";
+    provider = mkOption {
+      default = "nixpkgs";
+      type = types.enum [ "asdf" "nixpkgs" ];
+      example = "asdf";
     };
-    useAsdf = mkOption {
-      default = false;
-      type = types.bool;
-    };
+    enableSolargraph = mkEnableOption "solargraph language server";
   };
 
   config = mkIf cfg.enable {
+    programs.ruby.extraPackages = mkIf cfg.enableBuildLibs
+      (with pkgs; [ libmysqlclient libxml2 openssl sqlite zlib ]);
+
     home.packages = with pkgs;
-      let buildLibs = [ libmysqlclient libxml2 openssl sqlite zlib ];
-      in (optionals cfg.buildLibs buildLibs)
-      ++ (optionals (!cfg.useAsdf) [ ruby ] ++ cfg.extraRubyPackages);
-    programs.asdf.toolVersions.ruby = mkIf cfg.useAsdf rubyVersion;
+      (optional (cfg.provider == "nixpkgs") ruby) ++ cfg.extraPackages
+      ++ (optional cfg.enableSolargraph solargraph);
+
+    programs.asdf.toolVersions.ruby = mkIf (cfg.provider == "asdf") rubyVersion;
   };
 }

@@ -28,7 +28,9 @@
       next.enable = true;
       ruby = {
         enable = true;
-        useAsdf = false;
+        enableBuildLibs = true;
+        provider = "nixpkgs";
+        enableSolargraph = true;
       };
     };
   };
