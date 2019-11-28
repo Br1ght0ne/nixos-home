@@ -106,6 +106,13 @@ networking.networkmanager.enable = true;
 networking.firewall.enable = false;
 #+END_SRC
 * Programs
+** STRT Cachix
+#+BEGIN_SRC nix
+programs.cachix = {
+  enable = true;
+  # packagesToCache = [ ];
+};
+#+END_SRC
 ** TODO DConf
 Was needed to make dbus work at first install.
 #+BEGIN_SRC nix

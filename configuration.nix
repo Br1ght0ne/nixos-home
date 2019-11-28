@@ -63,6 +63,11 @@ networking.networkmanager.enable = true;
 
 networking.firewall.enable = false;
 
+programs.cachix = {
+  enable = true;
+  # packagesToCache = [ ];
+};
+
 programs.dconf.enable = true;
 
 programs.gnupg.agent.enable = true;
