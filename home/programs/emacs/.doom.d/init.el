@@ -116,7 +116,7 @@
 
        :tools             ; of the trade, and other activities
        ansible            ; automate all the things, even if it takes more time
-       debugger           ; stepping through code, to help you add bugs
+       ;; debugger        ; (FIXME: broken) stepping through code, to help you add bugs
        direnv             ; because long .profile files are bad
        docker             ; ever played buzzword bingo?
        editorconfig       ; let someone else argue about tabs vs spaces
