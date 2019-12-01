@@ -57,6 +57,8 @@ hardware.pulseaudio.support32Bit = true;
 
 sound.mediaKeys.enable = true;
 
+hardware.squashfs.enable = true;
+
 hardware.opengl.driSupport32Bit = true;
 
 networking.networkmanager.enable = true;

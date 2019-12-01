@@ -89,6 +89,10 @@ Very convenient. By the way, all the indicators (mute, etc.) work on NixOS :)
 #+BEGIN_SRC nix
 sound.mediaKeys.enable = true;
 #+END_SRC
+** SquashFS
+#+BEGIN_SRC nix
+hardware.squashfs.enable = true;
+#+END_SRC
 ** Video
 *** OpenGL
 **** Support 32-bit libraries
