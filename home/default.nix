@@ -25,6 +25,10 @@
 
     programs = {
       asdf.enable = false;
+      emacs = {
+        enable = true;
+        useHead = false;
+      };
       next.enable = true;
       ruby = {
         enable = true;
