@@ -901,7 +901,7 @@ https://github.com/hlissner/doom-emacs/issues/2135
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.tcsh\\'" . sh-mode))
 #+END_SRC
-** COMMENT Elcord
+** WAIT Elcord
 Discord Rich presence
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package! elcord
@@ -965,10 +965,4 @@ Discord Rich presence
                        :regex "^\\s*JJJ\\s*:"
                        :tests "test:" "    test: "
                        :not "test(arg)")))
-#+END_SRC
-** TODO evil-quick-diff
-#+BEGIN_SRC emacs-lisp
-(use-package! evil-quick-diff
-  :init
-  (evil-quick-diff-install))
 #+END_SRC
