@@ -55,6 +55,7 @@
       sd
       tealdeer
       tokei
+      topgrade
       xsv
 
       # communication
