@@ -7,6 +7,12 @@ let
   ruby = pkgs.ruby_2_6;
   rubyPackages = pkgs.rubyPackages_2_6;
   rubyVersion = ruby.version.majMinTiny;
+  rbenv = pkgs.fetchFromGitHub {
+    owner = "rbenv";
+    repo = "rbenv";
+    rev = "c46a970595036718f1b6d3ed8f38833820df709e";
+    sha256 = "05ghzwawzlwwkql091fhxmznd7wi52arpkxp106h2ngfgk592hbi";
+  };
 in {
   options.programs.ruby = {
     enable = mkEnableOption "Ruby language support";
@@ -17,7 +23,7 @@ in {
     enableBuildLibs = mkEnableOption "build libraries for Ruby";
     provider = mkOption {
       default = "nixpkgs";
-      type = types.enum [ "asdf" "nixpkgs" ];
+      type = types.enum [ "asdf" "nixpkgs" "rbenv" ];
       example = "asdf";
     };
     enableSolargraph = mkEnableOption "solargraph language server";
@@ -32,5 +38,15 @@ in {
       ++ (optional cfg.enableSolargraph solargraph);
 
     programs.asdf.toolVersions.ruby = mkIf (cfg.provider == "asdf") rubyVersion;
+
+    # add rbenv to zsh
+    programs.zsh = mkIf (cfg.provider == "rbenv") {
+      envExtra = ''
+        export PATH="${rbenv}/bin:$PATH"
+      '';
+      initExtra = ''
+        eval "$(rbenv init -)"
+      '';
+    };
   };
 }
