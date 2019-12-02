@@ -16,5 +16,3 @@
 ;; Testing grounds
 (package! howdoyou :recipe
   (:host github :repo "thanhvg/emacs-howdoyou"))
-(package! evil-quick-diff
-  :recipe (:host github :repo "rgrinberg/evil-quick-diff"))
