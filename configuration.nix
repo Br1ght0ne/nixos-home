@@ -14,6 +14,8 @@ imports = [
   ./overrides.nix
 ];
 
+boot.cleanTmpDir = true;
+
 boot.kernelPackages = pkgs.linuxPackages_latest;
 
 environment.pathsToLink = [ "share/zsh" ];

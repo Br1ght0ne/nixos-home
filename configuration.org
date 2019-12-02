@@ -23,6 +23,10 @@ imports = [
 ];
 #+END_SRC
 * Boot
+** Clean =/tmp=
+#+BEGIN_SRC nix
+boot.cleanTmpDir = true;
+#+END_SRC
 ** Kernel
 I prefer to use the latest and greatest Linux kernel on most of my machines.
 #+BEGIN_SRC nix
