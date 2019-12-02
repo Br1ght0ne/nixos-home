@@ -38,7 +38,8 @@
       patchelf
 
       # documents
-      gimp-with-plugins
+      gimp
+      # gimp-with-plugins (broken)
       libreoffice-fresh
 
       # other ART (Awesome Rust Tools)
