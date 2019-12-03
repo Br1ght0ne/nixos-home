@@ -822,11 +822,6 @@ inside of a Git repo.
   (setq doom-modeline-major-mode-color-icon t
         doom-modeline-buffer-file-name-style 'truncate-with-project))
 #+END_SRC
-*** TODO Fix startup
-https://github.com/hlissner/doom-emacs/issues/2135
-#+BEGIN_SRC emacs-lisp
-(fset 'battery-update #'ignore)
-#+END_SRC
 ** Elixir
 *** LSP server executable
 #+BEGIN_SRC emacs-lisp
