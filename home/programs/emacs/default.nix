@@ -17,7 +17,12 @@ in {
 
     programs = {
       emacs.package = if cfg.useHead then pkgs.emacsGit else pkgs.emacs;
-      zsh.sessionVariables.EDITOR = "emacs";
+      zsh = {
+        envExtra = ''
+          export PATH="$HOME/.emacs.d/bin:$PATH"
+        '';
+        sessionVariables.EDITOR = "emacs";
+      };
     };
 
     home.file = {
