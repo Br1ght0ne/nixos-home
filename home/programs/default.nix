@@ -5,6 +5,7 @@
     ./aspell.nix
     ./beets.nix
     ./cmus
+    ./crystal.nix
     ./emacs
     ./firefox.nix
     ./git.nix

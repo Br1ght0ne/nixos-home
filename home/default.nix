@@ -25,6 +25,7 @@
 
     programs = {
       asdf.enable = false;
+      crystal.enable = true;
       emacs = {
         enable = true;
         useHead = false;
