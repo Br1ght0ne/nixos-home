@@ -22,6 +22,7 @@
       lua
       nasm
       nodejs
+      python3Packages.nvchecker
       python3
       ruby
       shellcheck
