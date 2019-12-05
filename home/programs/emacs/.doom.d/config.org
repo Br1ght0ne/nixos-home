@@ -933,6 +933,12 @@ Discord Rich presence
   (add-hook 'pdf-view-mode-hook (λ! (evil-snipe-local-mode -1))))
 #+END_SRC
 
+* Workarounds & hotfixes
+** TODO =magit-todos=
+#+BEGIN_SRC emacs-lisp
+(after! magit
+  (setq magit-todos-auto-group-items 20))
+#+END_SRC
 * Testing grounds
 ** TODO Symbol overlay
 [[https://github.com/hlissner/doom-emacs/pull/1646]]
