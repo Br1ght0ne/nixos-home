@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  home.packages = with pkgs.gitAndTools; [ bfg-repo-cleaner git-standup hub ];
+  home.packages = with pkgs.gitAndTools; [ bfg-repo-cleaner delta git-standup hub ];
 
   home.file.gitignore = {
     target = ".gitignore";
@@ -24,6 +24,11 @@
 
   programs.git = {
     enable = true;
+    extraConfig = {
+      core = {
+        pager = "delta --dark";
+      };
+    };
     aliases = {
       mr = ''
         !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
