@@ -37,6 +37,13 @@
         provider = "nixpkgs";
         enableSolargraph = true;
       };
+      topgrade = {
+        enable = true;
+        config = {
+          disable = [ "emacs" "gem" ];
+          gitRepos = [ "~/.emacs.d" ];
+        };
+      };
     };
   };
 }

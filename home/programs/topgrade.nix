@@ -1,13 +1,26 @@
 { config, lib, pkgs, ... }:
 
-{
-  # TODO: home.packages = [ pkgs.topgrade ];
+with lib;
+let cfg = config.programs.topgrade;
+in {
+  options.programs.topgrade = {
+    enable = mkEnableOption "topgrade";
 
-  xdg.configFile."topgrade.toml".text = ''
-    git_repos = ["~/.emacs.d/"]
-    disable = ["emacs", "gem", "nix"]
+    config = mkOption {
+      default = { };
+      example = {
+        git_repos = [ "~/.emacs.d" ];
+        disable = [ "emacs" "gem" ];
+      };
+    };
+  };
 
-    [commands]
-    "gopass" = "gopass sync"
-  '';
+  config = {
+    home.packages = with pkgs;
+      [ topgrade ]
+      ++ (optional (attrByPath [ "run_in_tmux" ] false cfg.config) tmux);
+
+    # TODO: lib.generators.toTOML would be *so* nice!
+    # xdg.configFile."topgrade.toml".text = lib.generators.toTOML { } cfg.config;
+  };
 }
