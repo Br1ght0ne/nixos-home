@@ -27,7 +27,6 @@
       shellcheck
       shfmt
       stack
-      virtualbox
       wakatime
 
       # nix stuff
@@ -55,6 +54,7 @@
       sd
       tealdeer
       tokei
+      websocat
       xsv
 
       # communication
