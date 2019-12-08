@@ -1,6 +1,8 @@
 { pkgs, ... }:
 
 {
+  imports = [ ./forgit.nix ];
+
   home.packages = with pkgs; [ zsh-completions ];
 
   home.file.".zpreztorc".source = ./zpreztorc;
