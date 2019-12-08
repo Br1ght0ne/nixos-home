@@ -4,7 +4,7 @@ with lib;
 
 let
   cfg = config.programs.sway;
-  rev = "12a3c1e13bc0e7c43c70f7a273a61b686a5bd699";
+  rev = "3e2660c0e89569fee57774df3cb868a7e0232159";
   url = "https://github.com/colemickens/nixpkgs-wayland/archive/${rev}.tar.gz";
   waylandOverlay = (import (builtins.fetchTarball url));
 in {
