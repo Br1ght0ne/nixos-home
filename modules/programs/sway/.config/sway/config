@@ -68,7 +68,7 @@ input type:keyboard {
     xkb_options grp:alt_shift_toggle,caps:swapescape
 }
 
-input type:touchpad {
+input "2:7:SynPS/2_Synaptics_TouchPad" {
     dwt enabled
     tap enabled
     tap_button_map lrm
