@@ -14,6 +14,7 @@
     ./keybase.nix
     ./mpv.nix
     ./next.nix
+    ./nodejs.nix
     ./ranger
     ./ripgrep.nix
     ./rofi

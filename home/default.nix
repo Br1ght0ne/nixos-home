@@ -31,6 +31,10 @@
         useHead = false;
       };
       next.enable = true;
+      nodejs = {
+        enable = true;
+        yarn.enable = true;
+      };
       ruby = {
         enable = true;
         enableBuildLibs = true;
