@@ -939,6 +939,103 @@ Discord Rich presence
 (after! magit
   (setq magit-todos-auto-group-items 20))
 #+END_SRC
+** el-patch
+*** Org
+**** Checkbox -> TODO
+#+BEGIN_SRC emacs-lisp
+;; Last revision: 2019-12-10 09:27
+;; commit 2441b447897e561a29d263e204e5700bf5f920d9
+(el-patch-defun +org-init-capture-defaults-h ()
+  "Sets up some reasonable defaults, as well as two `org-capture' workflows that
+I like:
+
+1. The traditional way: invoking `org-capture' directly, via SPC X, or through
+   the :cap ex command.
+2. Through a org-capture popup frame that is invoked from outside Emacs (the
+   ~/.emacs.d/bin/org-capture script). This can be invoked from qutebrowser,
+   vimperator, dmenu or a global keybinding."
+  (setq org-default-notes-file
+        (expand-file-name +org-capture-notes-file org-directory)
+        org-capture-templates
+        '(("t" "Personal todo" entry
+           (file+headline +org-capture-todo-file "Inbox")
+           ;; HACK: use `TODO' instead of `[ ]'
+           (el-patch-swap "* [ ] %?\n%i\n%a" "* TODO %?\n%i\n%a") :prepend t)
+          ("n" "Personal notes" entry
+           (file+headline +org-capture-notes-file "Inbox")
+           "* %u %?\n%i\n%a" :prepend t)
+          ("j" "Journal" entry
+           (file+datetree +org-capture-journal-file "Inbox")
+           "* %U %?\n%i\n%a" :prepend t)
+
+          ;; Will use {project-root}/{todo,notes,changelog}.org, unless a
+          ;; {todo,notes,changelog}.org file is found in a parent directory.
+          ;; Uses the basename from `+org-capture-todo-file',
+          ;; `+org-capture-changelog-file' and `+org-capture-notes-file'.
+          ("p" "Templates for projects")
+          ("pt" "Project-local todo" entry  ; {project-root}/todo.org
+           (file+headline +org-capture-project-todo-file "Inbox")
+           "* TODO %?\n%i\n%a" :prepend t)
+          ("pn" "Project-local notes" entry  ; {project-root}/notes.org
+           (file+headline +org-capture-project-notes-file "Inbox")
+           "* %?\n%i\n%a" :prepend t)
+          ("pc" "Project-local changelog" entry  ; {project-root}/changelog.org
+           (file+headline +org-capture-project-changelog-file "Unreleased")
+           "* %?\n%i\n%a" :prepend t)
+
+          ;; Will use {org-directory}/{+org-capture-projects-file} and store
+          ;; these under {ProjectName}/{Tasks,Notes,Changelog} headings. They
+          ;; support `:parents' to specify what headings to put them under, e.g.
+          ;; :parents ("Projects")
+          ("o" "Centralized templates for projects")
+          ("ot" "Project todo" entry
+           (function +org-capture-central-project-todo-file)
+           "* TODO %?\n %i\n %a"
+           :heading "Tasks"
+           :prepend nil)
+          ("on" "Project notes" entry
+           (function +org-capture-central-project-notes-file)
+           "* %?\n %i\n %a"
+           :heading "Notes"
+           :prepend t)
+          ("oc" "Project changelog" entry
+           (function +org-capture-central-project-changelog-file)
+           "* %?\n %i\n %a"
+           :heading "Changelog"
+           :prepend t)))
+
+  ;; Kill capture buffers by default (unless they've been visited)
+  (after! org-capture
+    (org-capture-put :kill-buffer t))
+
+  (defadvice! +org--capture-expand-variable-file-a (file)
+    "If a variable is used for a file path in `org-capture-template', it is used
+as is, and expanded relative to `default-directory'. This changes it to be
+relative to `org-directory', unless it is an absolute path."
+    :filter-args #'org-capture-expand-file
+    (if (and (symbolp file) (boundp file))
+        (expand-file-name (symbol-value file) org-directory)
+      file))
+
+  (defadvice! +org--prevent-save-prompts-when-refiling-a (&rest _)
+    "Fix #462: when refiling from org-capture, Emacs prompts to kill the
+underlying, modified buffer. This fixes that."
+    :after 'org-refile
+    (when (bound-and-true-p org-capture-is-refiling)
+      (org-save-all-org-buffers)))
+
+  (add-hook! 'org-capture-mode-hook
+    (defun +org-show-target-in-capture-header-h ()
+      (setq header-line-format
+            (format "%s%s%s"
+                    (propertize (abbreviate-file-name (buffer-file-name (buffer-base-buffer)))
+                                'face 'font-lock-string-face)
+                    org-eldoc-breadcrumb-separator
+                    header-line-format))))
+
+  (when (featurep! :editor evil)
+    (add-hook 'org-capture-mode-hook #'evil-insert-state)))
+#+END_SRC
 * Testing grounds
 ** TODO Symbol overlay
 [[https://github.com/hlissner/doom-emacs/pull/1646]]

@@ -16,3 +16,4 @@
 ;; Testing grounds
 (package! howdoyou :recipe
   (:host github :repo "thanhvg/emacs-howdoyou"))
+(package! el-patch)
