@@ -48,6 +48,7 @@
           gitRepos = [ "~/.emacs.d" ];
         };
       };
+      waybar.enable = true;
     };
   };
 }

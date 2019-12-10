@@ -24,6 +24,7 @@
     ./rust
     ./scripts
     ./topgrade.nix
+    ./waybar
     ./zathura.nix
     ./zsh
   ];

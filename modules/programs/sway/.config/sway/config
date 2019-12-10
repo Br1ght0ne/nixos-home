@@ -57,6 +57,8 @@ exec {
       before-sleep 'swaylock -f'
     # kanshi
     mako
+    waybar -c ~/.config/waybar/config \
+      -s ~/.config/waybar/style.css
 }
 
 ## Input configuration
@@ -256,7 +258,8 @@ bar {
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
-    status_command i3status-rs $HOME/.config/i3statusbar.toml
+    # TODO: disabled because of waybar
+    # status_command i3status-rs $HOME/.config/i3statusbar.toml
     # swaybar_command waybar
 
     colors {

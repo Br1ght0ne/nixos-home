@@ -1,0 +1,108 @@
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "Roboto Mono", "Material Design Icons";
+  font-size: 16px;
+  min-height: 0;
+}
+
+window#waybar {
+  background-color: rgba(11, 11, 11, 0.8);
+  color: #ffffff;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+}
+
+window#waybar.hidden {
+  opacity: 0.2;
+}
+
+#window {
+  padding: 0 15px;
+}
+
+/*
+window#waybar.empty {
+    background-color: transparent;
+}
+window#waybar.solo {
+    background-color: #FFFFFF;
+}
+*/
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+#workspaces button {
+  padding: 0 5px;
+  background-color: transparent;
+  border-bottom: 2px solid rgba(100, 114, 125, 0.5);
+  color: #999999;
+}
+
+#workspaces button.focused {
+  color: #ffffff;
+  background-color: #333333;
+  border-bottom: 2px solid #00ff96;
+}
+
+#workspaces button.urgent {
+  background-color: #eb4d4b;
+}
+
+#clock,
+#custom-vpn,
+#battery,
+#cpu,
+#memory,
+#backlight,
+#network,
+#pulseaudio,
+#tray,
+#mode,
+#idle_inhibitor {
+  padding: 0 5px;
+  margin: 0 4px;
+  background-color: transparent;
+  border-bottom: 2px solid #00ff96;
+  color: #ffffff;
+}
+
+#mode {
+  background-color: #00ff96;
+  color: #000000;
+}
+
+#pulseaudio,
+#clock,
+#tray,
+#cpu {
+  border-bottom: transparent;
+}
+
+#custom-battery {
+  border-bottom: 2px solid #bff874;
+}
+
+#custom-battery.charging {
+  border-bottom: 2px solid #00ff96;
+}
+
+#custom-vpn.down,
+#custom-battery.critical:not(.charging) {
+  border-bottom: 2px solid #dd2241;
+}
+
+label:focus {
+  background-color: #000000;
+}
+
+#network.disconnected {
+  border-bottom: 2px solid #dd2241;
+}
+
+#pulseaudio.bluetooth {
+  border-bottom: 2px solid #1a8cff;
+}
+
+#pulseaudio.muted {
+  border-bottom: 2px solid #fff569;
+}
