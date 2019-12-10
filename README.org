@@ -5,6 +5,7 @@
 dotfiles for Nix + home-manager (mostly for NixOS)
 #+END_QUOTE
 
+[[https://builtwithnix.org/badge.svg][Built with Nix]]
 ** TODO What's included
 ** STRT Installation
 *** NixOS
