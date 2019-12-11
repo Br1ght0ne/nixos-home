@@ -96,6 +96,44 @@ services.bitlbee = {
   plugins = with pkgs; [ bitlbee-discord ];
 };
 
+services.borgbackup.jobs = {
+  home = {
+    paths = [
+      "~/Backups"
+      "~/dev"
+      "~/gallery"
+      "~/org"
+      "~/priv"
+    ];
+    exclude = [
+      "*/.git"
+      "*/target"
+      "*/_?build"
+      "*/vendor"
+      "*/tmp"
+      "*/cache"
+      "*/node_modules"
+      "*/dev/contrib"
+    ];
+    repo = "19362@ch-s012.rsync.net:backups";
+    extraArgs = "--remote-path=borg1";
+    encryption = {
+      mode = "repokey";
+      passCommand = "${pkgs.pass} show borgbackup";
+    };
+    compression = "zstd";
+    prune.keep = {
+      within = "1d";
+      daily = 7;
+      weekly = 4;
+      monthly = -1;
+    };
+    startAt = "16:00";
+    user = "brightone";
+    group = "nogroup";
+  };
+};
+
 services.dbus.packages = [ pkgs.gnome3.dconf ];
 
 services.flatpak.enable = true;
