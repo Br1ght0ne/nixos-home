@@ -56,6 +56,7 @@
       tokei
       websocat
       xsv
+      zola
 
       # communication
       discord
