@@ -247,28 +247,3 @@ mode "resize" {
         Escape mode "default"
     }
 }
-
-
-## Status Bar:
-
-# Read `man 5 sway-bar` for more information about this section.
-bar {
-    font pango:DejaVu Sans Mono, FontAwesome 12
-    position top
-
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    # TODO: disabled because of waybar
-    # status_command i3status-rs $HOME/.config/i3statusbar.toml
-    # swaybar_command waybar
-
-    colors {
-        separator #666666
-        background #222222
-        statusline #dddddd
-        focused_workspace #0088CC #0088CC #ffffff
-        active_workspace #333333 #333333 #ffffff
-        inactive_workspace #333333 #333333 #888888
-        urgent_workspace #2f343a #900000 #ffffff
-    }
-}
