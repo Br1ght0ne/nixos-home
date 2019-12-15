@@ -41,5 +41,8 @@
         };
       }
     ];
+    shellAliases = {
+      ls = "exa --group-directories-first";
+    };
   };
 }
