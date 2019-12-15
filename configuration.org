@@ -247,6 +247,13 @@ For Redshift to find my location.
 #+BEGIN_SRC nix
 services.geoclue2.enable = true;
 #+END_SRC
+** Tor
+#+BEGIN_SRC nix
+services.tor = {
+  enable = true;
+  client.enable = true;
+};
+#+END_SRC
 * Regional configuration, etc.
 ** Time zone
 #+BEGIN_SRC nix

@@ -145,6 +145,11 @@ xdg.portal = {
 
 services.geoclue2.enable = true;
 
+services.tor = {
+  enable = true;
+  client.enable = true;
+};
+
 time.timeZone = "Europe/Kiev";
 
 # This value determines the NixOS release with which your system is to be

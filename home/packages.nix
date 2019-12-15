@@ -84,6 +84,7 @@
       # passwords & security
       gopass
       pass
+      tor-browser-bundle-bin
 
       # net & cloud tools
       doctl
