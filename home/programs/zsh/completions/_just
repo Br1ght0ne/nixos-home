@@ -1,0 +1,41 @@
+#compdef just
+
+local curcontext="$curcontext" state line
+typeset -A opt_args
+
+local recipes
+
+_arguments -s -C \
+    --dry-run'[Print what just would do without doing it]' \
+    --dump'[Print entire justfile]' \
+    --evaluate'[Print evaluated variables]' \
+    --highlight'[Highlight echoed recipe lines in bold]' \
+    {-l,--list}'[List available recipes and their arguments]' \
+    {-q,--quiet}'[Suppress all output]' \
+    --summary'[List names of available recipes]' \
+    {-v,--verbose}'[Use verbose output]' \
+    '(- *)'{-h,--help}'[Print help information]' \
+    '(- *)'{-V,--version}'[Print version information]' \
+    --color='[Print colorful output (default: auto)]:color:(auto always never)' \
+    {-f,--justfile}='[Use <JUSTFILE> as justfile]:justfile:_files' \
+    --set='[Set <VARIABLE> to <VALUE>]' \
+    --shell='[Invoke <SHELL> to run recipes (default: sh)]:shell:->shell' \
+    {-s,--show}='[Show information about <RECIPE>]:recipe:->recipe' \
+    {-d,--working-directory}='[Use <WORKING-DIRECTORY> as working directory]:directory:_files -/' \
+    '*:recipe:->recipe'
+
+case $state in
+    (shell)
+        _alternative "shells:shell:($(cat /etc/shells))"
+        ;;
+    (recipe)
+        recipes=($(just --summary | tr ' ' "\n"))
+        _describe 'recipes' recipes
+        ;;
+esac
+
+# Local Variables:
+# mode: sh
+# sh-shell: zsh
+# End:
+# vim: ft=zsh

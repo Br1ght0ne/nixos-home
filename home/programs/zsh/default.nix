@@ -6,6 +6,7 @@
   home.packages = with pkgs; [ zsh-completions ];
 
   home.file.".zpreztorc".source = ./zpreztorc;
+  home.file.".zsh_completions".source = ./completions;
 
   programs.zsh = {
     enable = true;
@@ -14,6 +15,9 @@
     loginExtra = ''
       ssh-add -D
       ssh-add $HOME/.ssh/{blackbird,id_rsa}
+    '';
+    envExtra = ''
+      fpath+=$HOME/.zsh_completions
     '';
     plugins = with pkgs; [
       {
