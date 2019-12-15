@@ -3,6 +3,8 @@
 {
 
 imports = [
+  # Caches.
+  ./cachix.nix
   # Enable system-wide modules.
   ./modules
   # Home-manager and related stuff.

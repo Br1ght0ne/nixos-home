@@ -11,6 +11,8 @@ We use only Nixpkgs here.
 * Imports
 #+BEGIN_SRC nix
 imports = [
+  # Caches.
+  ./cachix.nix
   # Enable system-wide modules.
   ./modules
   # Home-manager and related stuff.
