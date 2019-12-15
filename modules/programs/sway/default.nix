@@ -50,8 +50,10 @@ in {
           waypipe # network transparency for Wayland
           wf-recorder # wayland screenrecorder
           wl-clipboard # clipboard CLI utilities
-          wtype # xdotool, but for wayland
+          wmctrl
+          wtype # xdotool, but for wayland (TODO broken)
           xdg-desktop-portal-wlr # xdg-desktop-portal backend for wlroots
+          ydotool # xdotool for wayland
         ] ++ (optional cfg.enableXwayland xwayland)
         ++ (optional cfg.enableQtwayland qt5.qtwayland);
     };
