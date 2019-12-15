@@ -1,6 +1,13 @@
 { pkgs, ... }:
 
 {
+  nixpkgs.overlays = [
+    (import (builtins.fetchTarball {
+      url = let rev = "991ed616bdd405f3f88ff4cad08985911ff52fff";
+      in "https://github.com/filalex77/nixpkgs-overlay/archive/${rev}.tar.gz";
+    }))
+  ];
+
   home.packages = with pkgs;
     let
       myEmacs = (emacs.override {
@@ -102,5 +109,8 @@
       epr
       python3Packages.mps-youtube
       youtube-dl
+
+      # my stuff
+      swaylayout
     ];
 }
