@@ -47,6 +47,7 @@
       du-dust
       fd
       hexyl
+      hyperfine
       just
       lsd
       pastel
@@ -94,9 +95,11 @@
       transmission-gtk
 
       # synchronization
+      borgbackup
       syncthing-gtk
 
       # entertainment
+      epr
       python3Packages.mps-youtube
       youtube-dl
     ];
