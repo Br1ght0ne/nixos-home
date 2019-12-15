@@ -14,6 +14,7 @@ in {
         modules-left = [ "sway/workspaces" "sway/mode" "sway/window" ];
         modules-center = [ ];
         modules-right = [
+          "custom/keyboard"
           "network"
           "battery"
           "backlight"
@@ -30,6 +31,9 @@ in {
         "sway/window" = {
           tooltip = false;
           max-length = 50;
+        };
+        "custom/keyboard" = {
+          exec = "swaylayout --listen 1:1:AT_Translated_Set_2_keyboard";
         };
         network = {
           tooltip = false;
