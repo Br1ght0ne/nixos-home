@@ -111,8 +111,8 @@
        :term              ; is this hacking?
        eshell             ; hack the world, one cons at a time
        ;; shell           ; back to basics
-       term               ; the virgin default terminal (still nice)
-       ;; vterm           ; the CHAD native-enhanced terminal module (TODO alpha)
+       ;; term            ; the virgin default terminal (still nice)
+       vterm              ; the CHAD native-enhanced terminal module
 
        :tools             ; of the trade, and other activities
        ansible            ; automate all the things, even if it takes more time

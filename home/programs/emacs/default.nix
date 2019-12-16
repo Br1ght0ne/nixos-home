@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 with lib;
-let
-  cfg = config.programs.emacs;
+let cfg = config.programs.emacs;
 in {
   options.programs.emacs = {
     useHead = mkEnableOption "building Emacs 27 from source";
@@ -16,7 +15,10 @@ in {
     ];
 
     programs = {
-      emacs.package = if cfg.useHead then pkgs.emacsGit else pkgs.emacs;
+      emacs = {
+        package = if cfg.useHead then pkgs.emacsGit else pkgs.emacs;
+        extraPackages = epkgs: [ epkgs.emacs-libvterm ];
+      };
       zsh = {
         envExtra = ''
           export PATH="$HOME/.emacs.d/bin:$PATH"
