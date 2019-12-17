@@ -84,7 +84,7 @@
       winetricks
 
       # games
-      cataclysm-dda
+      cataclysm-dda-git
 
       # monitoring
       inxi
