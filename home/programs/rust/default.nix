@@ -28,9 +28,12 @@
     cargo-web
     cargo-xbuild
     rustup
+    sccache
+    wasm-pack
   ];
 
   programs.zsh.envExtra = ''
+    export RUSTC_WRAPPER=sccache
     export PATH="$HOME/.cargo/bin:$PATH"
   '';
 }
