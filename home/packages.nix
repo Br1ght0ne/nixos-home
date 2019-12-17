@@ -28,6 +28,7 @@
       ix
       lua
       nasm
+      nim
       python3Packages.nvchecker
       python3
       ruby
@@ -35,9 +36,11 @@
       shfmt
       stack
       wakatime
+      zig
 
       # nix stuff
       nixfmt
+      nix-diff
       nix-index
       nix-prefetch-github
       nix-review
