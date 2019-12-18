@@ -1,0 +1,8 @@
+# See https://typoci.com/documentation
+
+dictionaries:
+  - en
+
+excluded_files:
+  - "home/programs/emacs/.doom.d/config.org"
+  - "**/*.nix"
