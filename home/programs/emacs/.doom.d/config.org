@@ -589,10 +589,6 @@
 #+BEGIN_SRC emacs-lisp
 (use-package! ob-elixir
   :after org)
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((sql . t)))
 #+END_SRC
 *** ~org-web-tools~
 #+BEGIN_SRC emacs-lisp
