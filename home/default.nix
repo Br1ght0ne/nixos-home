@@ -50,5 +50,10 @@
       };
       waybar.enable = true;
     };
+
+    services = {
+      lorri.enable = true;
+
+    };
   };
 }
