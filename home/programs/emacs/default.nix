@@ -10,7 +10,7 @@ in {
     nixpkgs.overlays = mkIf cfg.useHead [
       (import (builtins.fetchTarball {
         url =
-          "https://github.com/nix-community/emacs-overlay/archive/29f935f0e15c5a74051ac01731c01516cdfde3a8.tar.gz";
+          "https://github.com/nix-community/emacs-overlay/archive/08c01cc7b88f8564bd7ecb7cc387db922f19300e.tar.gz";
       }))
     ];
 
