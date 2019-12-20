@@ -30,6 +30,10 @@
         enable = true;
         useHead = false;
       };
+      git = {
+        enable = true;
+        pager = "diff-so-fancy";
+      };
       next.enable = true;
       nodejs = {
         enable = true;
