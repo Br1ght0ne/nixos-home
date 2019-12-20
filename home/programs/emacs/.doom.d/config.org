@@ -816,7 +816,8 @@ inside of a Git repo.
 #+BEGIN_SRC emacs-lisp
 (after! doom-modeline
   (setq doom-modeline-major-mode-color-icon t
-        doom-modeline-buffer-file-name-style 'truncate-with-project))
+        doom-modeline-buffer-file-name-style 'truncate-with-project
+        doom-modeline-vcs-max-length 60))
 #+END_SRC
 ** Elixir
 *** LSP server executable
