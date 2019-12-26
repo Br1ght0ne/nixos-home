@@ -192,9 +192,11 @@ bindsym --to-code {
 
     # Dismiss notification
     $mod+m exec makoctl dismiss
+    $mod+Shift+m exec makoctl dismiss -a
 
     # Toggle the current focus between tiling and floating mode
     $mod+Shift+space floating toggle
+    $mod+Shift+z sticky toggle
 
     # Swap focus between the tiling area and the floating area
     $mod+space focus mode_toggle
