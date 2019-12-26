@@ -1,13 +1,21 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+def has?(command)
+  system("which #{command}")
+end
+
+def find_browser
+  ['xdg-open', 'firefox'].find { |exe| has?(exe) }
+end
+
 handlers = {
   image: 'curl-to-imv',
   coub: 'coub-dl',
   video: 'mpv --loop',
   magnet: 'transmission-gtk',
   flatpak: 'alacritty -e flatpak install --user',
-  browser: ENV['BROWSER'] || 'firefox'
+  browser: find_browser
 }
 
 ARGV.each do |url|
