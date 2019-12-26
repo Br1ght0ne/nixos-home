@@ -19,6 +19,10 @@
     envExtra = ''
       fpath+=$HOME/.zsh_completions
     '';
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "wd" ];
+    };
     plugins = with pkgs; [
       {
         name = "prezto";
