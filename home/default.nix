@@ -40,7 +40,7 @@
         yarn.enable = true;
       };
       ruby = {
-        enable = true;
+        enable = false;
         enableBuildLibs = true;
         provider = "nixpkgs";
         enableSolargraph = true;
