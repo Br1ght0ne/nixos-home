@@ -1,0 +1,8 @@
+work {
+	output "Dell Inc. DELL P2419HC 6LZCJQ2" mode 1920x1080 position 0,0
+	output eDP-1 position 1920,0 mode 1920x1080 scale 1
+}
+
+mobile {
+	output eDP-1 mode 1920x1080 scale 1
+}

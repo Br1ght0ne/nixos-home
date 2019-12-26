@@ -62,6 +62,7 @@ in {
       xdg.configFile."sway/config".source = ./.config/sway/config;
       xdg.configFile."swaylock/config".source = ./.config/swaylock/config;
       xdg.configFile."i3statusbar.toml".source = ./.config/i3statusbar.toml;
+      xdg.configFile."kanshi/config".source = ./.config/kanshi/config;
     };
   };
 }
