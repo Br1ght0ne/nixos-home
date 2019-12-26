@@ -43,6 +43,7 @@
     ];
     shellAliases = {
       ls = "exa --group-directories-first";
+      cdr = "cd $(git rev-parse --show-toplevel)";
     };
   };
 }
