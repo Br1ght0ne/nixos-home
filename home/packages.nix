@@ -43,7 +43,7 @@
       nix-diff
       nix-index
       nix-prefetch-github
-      nix-review
+      nixpkgs-review
       patchelf
 
       # documents
