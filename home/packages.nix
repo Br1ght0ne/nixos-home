@@ -19,11 +19,15 @@
       steam-run = (steamWithLibs.override { nativeOnly = true; }).run;
     in [
       # development
+      ameba
+      ccls
+      clang-tools
       crystal
       editorconfig-core-c
       elixir
       exercism
       gdb
+      gnome3.glade
       insomnia
       ix
       lua
@@ -49,13 +53,17 @@
       # documents
       gimp
       # gimp-with-plugins (broken)
+      graphviz
       libreoffice-fresh
+      pandoc
+      python3Packages.grip
 
       # other ART (Awesome Rust Tools)
       exa
       diskus
       du-dust
       fd
+      ffsend
       hexyl
       hyperfine
       just
@@ -98,6 +106,7 @@
       tor-browser-bundle-bin
 
       # net & cloud tools
+      ddgr
       doctl
       httpie
       miniserve
