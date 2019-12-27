@@ -21,7 +21,7 @@
     '';
     oh-my-zsh = {
       enable = true;
-      plugins = [ "wd" ];
+      plugins = [ "docker" "docker-compose" "wd" "z" ];
     };
     plugins = with pkgs; [
       {
