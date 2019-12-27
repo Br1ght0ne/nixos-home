@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   imports = [
     ./alacritty.nix
     ./asdf.nix
@@ -42,7 +42,15 @@
       ];
     };
     command-not-found.enable = true;
-    direnv.enable = true;
+    direnv = {
+      enable = true;
+      config = {
+        whitelist = {
+          prefix = [ "${config.home.homeDirectory}/dev" ];
+          exact = [ "/etc/nixos" ];
+        };
+      };
+    };
     go.enable = true;
     gpg.enable = true;
     htop.enable = true;
