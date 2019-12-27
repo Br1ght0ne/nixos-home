@@ -3,7 +3,7 @@
 {
   nixpkgs.overlays = [
     (import (builtins.fetchTarball {
-      url = let rev = "991ed616bdd405f3f88ff4cad08985911ff52fff";
+      url = let rev = "master";
       in "https://github.com/filalex77/nixpkgs-overlay/archive/${rev}.tar.gz";
     }))
   ];
